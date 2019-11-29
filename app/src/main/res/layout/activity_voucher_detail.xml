@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="20dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/rounded_icon"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:cardCornerRadius="250dp"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/icon"
+                android:scaleType="centerCrop"/>
+
+        </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:layout_below="@+id/rounded_icon"
+        android:id="@+id/rl_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome"
+            android:textSize="15sp" />
+
+        <EditText
+            android:textColor="#000"
+            android:background="@drawable/bottom_border_line"
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/primary_heading"
+            android:text="Cappello Bianco Adidas"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:layout_below="@+id/tv_name"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_name"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/tv_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Valore"
+            android:textSize="15sp" />
+
+        <EditText
+            android:textColor="#000"
+            android:background="@drawable/bottom_border_line"
+            android:id="@+id/et_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/primary_heading"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:layout_below="@+id/tv_value"
+            android:text="20 WT"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_merchant"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_value"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/tv_merchant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Merchant"
+            android:textSize="15sp" />
+
+        <EditText
+            android:textColor="#000"
+            android:background="@drawable/bottom_border_line"
+            android:id="@+id/et_merchant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/primary_heading"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:layout_below="@+id/tv_merchant"
+            android:text="Adidas Store"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_deadline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_merchant"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/tv_deadline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scadenza"
+            android:textSize="15sp" />
+
+        <EditText
+            android:textColor="#000"
+            android:background="@drawable/bottom_border_line"
+            android:id="@+id/et_deadline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/primary_heading"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:layout_below="@+id/tv_deadline"
+            android:text="31/12/2019"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_performedby"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_use_voucher"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:id="@+id/tv_performedby"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Eseguito Da"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:textColor="#000"
+            android:id="@+id/tv_performedby_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/primary_heading"
+            android:text="Emiliano Vernini"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:layout_below="@+id/tv_performedby"/>
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_use_voucher"
+        android:background="@drawable/ripple"
+        android:text="USA VOCUHER"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_5dp"/>
+
+
+</RelativeLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_wallet">
+
+    <fragment
+        android:id="@+id/nav_wallet"
+        android:name="com.ey.pwbc.ui.wallet.WalletFragment"
+        android:label="@string/menu_wallet_title"
+        tools:layout="@layout/wallet_fragment" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.ey.pwbc.ui.profile.EmployeeProfileFragment"
+        android:label="@string/menu_profile_title"
+        tools:layout="@layout/fragment_profile_employee" />
+
+    <fragment
+        android:id="@+id/nav_vetrina"
+        android:name="com.ey.pwbc.ui.vetrina.VetrinaFragment"
+        android:label="@string/menu_vetrina_title"
+        tools:layout="@layout/fragment_vetrina" />
+	
+	
+    <fragment
+        android:id="@+id/nav_scan"
+        android:name="com.ey.pwbc.ui.scanner.ScanDetailFragment"
+        android:label="@string/menu_tools"
+        tools:layout="@layout/scan_detail_fragment">
+        <action
+            android:id="@+id/action_nav_scan_to_nav_post_scan"
+            app:destination="@id/nav_post_scan" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.ey.pwbc.ui.logout.LogoutFragment"
+        android:label="@string/menu_logout_title"
+        tools:layout="@layout/fragment_logout" />
+ <fragment
+        android:id="@+id/nav_post_scan"
+        android:name="com.ey.pwbc.ui.scanner.PostScanFragment"
+        android:label="@string/menu_tools"
+        tools:layout="@layout/post_scan_fragment">
+            <argument
+            android:name="scanStatus"
+            app:argType="com.ey.pwbc.model.ScanStatus" />
+    </fragment>
+
+</navigation>

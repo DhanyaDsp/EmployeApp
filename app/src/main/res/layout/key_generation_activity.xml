@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAsh">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="32dp"
+        >
+
+        <TextView
+            android:id="@+id/txt_key_generation_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/genera_qui_la_tua_coppia_di_chiavi"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/titles"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_primary_key"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/private_key"
+            android:textSize="@dimen/primary_heading"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_key_generation_prompt" />
+
+        <EditText
+            android:id="@+id/edt_key_generation_primary_key"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/curved_edit_text_background"
+            android:importantForAutofill="no"
+            android:textColor="@color/colorDarkBlack"
+            android:inputType="text|number"
+            app:layout_constraintTop_toBottomOf="@+id/txt_primary_key"
+            tools:ignore="LabelFor" />
+
+        <Button
+            android:id="@+id/btn_generate_key"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorDarkAsh"
+            android:padding="4dp"
+            android:text="@string/generate_key"
+            android:textAllCaps="false"
+            android:textColor="@color/colorLightBlue"
+            android:textSize="@dimen/secondary_headings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_key_generation_primary_key" />
+
+        <TextView
+            android:id="@+id/txt_public_key_prompt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/public_key"
+            android:textSize="@dimen/primary_heading"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_generate_key" />
+
+        <EditText
+            android:id="@+id/edt_key_generation_private_key"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/curved_edit_text_background"
+            android:importantForAutofill="no"
+            android:textColor="@color/colorDarkBlack"
+            android:inputType="text|number"
+            app:layout_constraintTop_toBottomOf="@+id/txt_public_key_prompt"
+            tools:ignore="LabelFor" />
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/curved_button_background"
+            android:layout_marginTop="32dp"
+            android:text="@string/submit"
+            android:textAllCaps="false"
+            android:visibility="invisible"
+            android:textSize="@dimen/titles"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintTop_toBottomOf="@+id/edt_key_generation_private_key"
+
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
