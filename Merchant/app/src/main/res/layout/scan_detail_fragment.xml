@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="scanData"
+            type="com.ey.pwbc.model.ScanData" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/medium_padding"
+        tools:context=".ui.scanner.ScanDetailFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btnProceed"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical"
+            android:padding="@dimen/medium_padding">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_padding"
+                android:hint="@string/name">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/EdiText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={scanData.name}"
+                    android:textSize="@dimen/input_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_padding"
+                android:hint="@string/valore">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/EdiText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={scanData.value}"
+                    android:textSize="@dimen/input_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_padding"
+                android:hint="@string/merchant">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/EdiText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={scanData.merchant}"
+                    android:textSize="@dimen/input_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/scandenza">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/EdiText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={scanData.date}"
+                    android:textSize="@dimen/input_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btnProceed"
+            android:layout_marginBottom="@dimen/large_padding"
+            android:hint="@string/eseguito_da">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/EdiText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cappello Bianco"
+                android:textSize="@dimen/input_text_size" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnProceed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/curved_voucer_bg"
+            android:hint="@string/eseguito_da" />
+
+    </RelativeLayout>
+</layout>
