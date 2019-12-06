@@ -26,10 +26,10 @@ object VoucherRepository {
     }
 
     private fun setVoucher() {
-        voucherList?.add(Voucher("Adidas", "100 WT", 1))
-        voucherList?.add(Voucher("Levis", "10 QT", 1))
-        voucherList?.add(Voucher("Reymond", "50 QT", 3))
-        voucherList?.add(Voucher("Puma", "70 QT", 2))
+        voucherList?.add(Voucher("Adidas", "100 WT", 1,""))
+        voucherList?.add(Voucher("Levis", "10 QT", 1,""))
+        voucherList?.add(Voucher("Reymond", "50 QT", 3,""))
+        voucherList?.add(Voucher("Puma", "70 QT", 2,""))
 
 
     }

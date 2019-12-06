@@ -3,10 +3,12 @@ package com.ey.pwbc.ui.authentication
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -24,56 +26,31 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     val user = User()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.title = getString(R.string.app_name)
         initDataBinding();
         subscribe();
-
-        //loginViewModel.onLoginClicked()
-
-/*        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
-
-        binding = DataBindingUtil.setContentView(this@LoginActivity, R.layout.activity_login)
-
-        binding.lifecycleOwner = this
-
-        binding.viewModel = loginViewModel*/
-
-
-/*        val activityMainBinding =
-            DataBindingUtil.setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
-        activityMainBinding.viewModel = ViewModelProviders.of(
-            this,
-            LoginViewModelFactory(this)
-        )
-            .get(LoginViewModel::class.java)*/
-
-        //loginViewModel.onLoginClicked(loginButton)
-
-        //createPrivateKey()
-        /*loginButton.setOnClickListener {
-            if (validateComponents()) {
-                intent = Intent(applicationContext, KeyGenerationActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-        }*/
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     private fun subscribe() {
         loginViewModel.getUser().observe(this, Observer<User> { user ->
             run {
                 if (user != null) {
-                    moveToKeyGenerationScreen()
+                    moveToKeyGenerationScreen(user.getUserType())
                 }
             }
         })
     }
 
-    private fun moveToKeyGenerationScreen() {
-        val intent = Intent(this, KeyGenerationActivity::class.java)
-        startActivity(intent)
+    private fun moveToKeyGenerationScreen(userType: Int) {
+        if (userType == User.TYPE_EMPLOYEE || userType == User.TYPE_MERCHANT) {
+            //we have to pass the user type to the SDK
+            val intent = Intent(this, KeyGenerationActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun initDataBinding() {

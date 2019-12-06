@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_wallet">
+    app:startDestination="@+id/nav_no_token_wallet">
 
     <fragment
         android:id="@+id/nav_wallet"
@@ -11,6 +11,23 @@
         android:label="@string/menu_wallet_title"
         tools:layout="@layout/wallet_fragment" />
 
+    <fragment
+        android:id="@+id/nav_emessi"
+        android:name="com.ey.pwbc.ui.wallet.WalletFragment"
+        android:label="@string/menu_wallet_title"
+        tools:layout="@layout/wallet_fragment" />
+
+    <fragment
+        android:id="@+id/nav_transferiti"
+        android:name="com.ey.pwbc.ui.wallet.WalletFragment"
+        android:label="@string/menu_wallet_title"
+        tools:layout="@layout/wallet_fragment" />
+
+    <fragment
+        android:id="@+id/nav_no_token_wallet"
+        android:name="com.ey.pwbc.ui.wallet.WalletFragment"
+        android:label="@string/menu_wallet_title"
+        tools:layout="@layout/wallet_no_token_fragment" />
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.ey.pwbc.ui.profile.EmployeeProfileFragment"
@@ -22,8 +39,7 @@
         android:name="com.ey.pwbc.ui.vetrina.VetrinaFragment"
         android:label="@string/menu_vetrina_title"
         tools:layout="@layout/fragment_vetrina" />
-	
-	
+
     <fragment
         android:id="@+id/nav_scan"
         android:name="com.ey.pwbc.ui.scanner.ScanDetailFragment"
@@ -40,14 +56,20 @@
         android:name="com.ey.pwbc.ui.logout.LogoutFragment"
         android:label="@string/menu_logout_title"
         tools:layout="@layout/fragment_logout" />
- <fragment
+    <fragment
         android:id="@+id/nav_post_scan"
         android:name="com.ey.pwbc.ui.scanner.PostScanFragment"
         android:label="@string/menu_tools"
         tools:layout="@layout/post_scan_fragment">
-            <argument
+        <argument
             android:name="scanStatus"
             app:argType="com.ey.pwbc.model.ScanStatus" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_merchant_welcome"
+        android:name="com.ey.pwbc.ui.dashboard.MerchantWelcomePromptFragment"
+        android:label="@string/menu_tools"
+        tools:layout="@layout/merchant_welcome_prompt">
 
+    </fragment>
 </navigation>

@@ -9,13 +9,14 @@
     <string name="login">Accedi</string>
     <string name="submit">Submit</string>
     <string name="genera_qui_la_tua_coppia_di_chiavi">Genera qui la tua coppia di chiavi</string>
-    <string name="generate_key">Genera Chilave</string>
+    <string name="generate_key">Genera Chiave</string>
     <string name="menu_wallet">Wallet</string>
     <string name="menu_products">Prodotti</string>
     <string name="menu_profile">Profilo</string>
     <string name="menu_others">Altro</string>
     <string name="voucher_utilization">Voucher da utilizzare</string>
     <string name="Buy">Acquista</string>
+    <string name="voucher_title">"Dettaglio Voucher"</string>
     <string name="Voucher">Voucher</string>
     <string name="title_activity_landing">LandingActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -58,7 +59,8 @@
     <string name="elenco_voucher">"STIAMO ATTIVANDO IL TUO WALLET"</string>
     <string name="attendi_i">"Attendi I attivazione del tuo Wallet per iniziare a ricevere i tuoi voucher"</string>
     <string name="stiamo_attivando_il_tuo_wallet">STIAMO ATTIVANDO IL TUO WALLET</string>
-
+    <string name="voucher_emessi">Voucher Emessi</string>
+    <string name="voucher_trasferiti">Voucher Transferiti</string>
 
 
 </resources>

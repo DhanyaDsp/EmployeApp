@@ -4,9 +4,11 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.SparseArray
+import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.ey.pwbc.R
 import com.ey.pwbc.model.ScanData
 import com.google.android.gms.vision.barcode.Barcode
@@ -18,6 +20,9 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import info.androidhive.barcode.BarcodeReader
 import kotlinx.android.synthetic.main.activity_scan.*
+import kotlinx.android.synthetic.main.activity_scan.toolbar
+import kotlinx.android.synthetic.main.activity_scan.tvTitle
+import kotlinx.android.synthetic.main.app_bar_landing.*
 
 
 class ScanActivity : AppCompatActivity(), PermissionListener, BarcodeReader.BarcodeReaderListener {
@@ -42,11 +47,19 @@ class ScanActivity : AppCompatActivity(), PermissionListener, BarcodeReader.Barc
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan)
-        supportActionBar?.title = "Acquita Voucher"
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        tvTitle.text = "Acquita Voucher"
         barcodeReader =
             supportFragmentManager.findFragmentById(R.id.barcode_scanner) as BarcodeReader?
         initPerms()
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.landing, menu)
+        return true
     }
 
     private fun initPerms() {

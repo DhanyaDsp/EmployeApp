@@ -23,7 +23,7 @@ class Utils {
             cancelListener: View.OnClickListener,
             type: Int
         ) {
-            val dialog: AppCompatDialog = AppCompatDialog(context);
+            val dialog = AppCompatDialog(context);
             val dialogView = LayoutInflater.from(context).inflate(R.layout.custom_dialog, null)
             dialog.setContentView(dialogView)
             val okBtn = dialogView.findViewById<AppCompatButton>(R.id.btnOK);
@@ -51,6 +51,7 @@ class Utils {
                 confirmBtn.visibility = View.GONE
                 tvConfirmMsg.visibility = View.GONE
             } else {
+                okBtn.visibility = View.GONE
                 cancelBtn.visibility = View.GONE
                 confirmBtn.visibility = View.VISIBLE
                 cancelBtn.visibility = View.VISIBLE

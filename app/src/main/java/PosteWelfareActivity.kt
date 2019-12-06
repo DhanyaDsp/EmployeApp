@@ -1,18 +1,16 @@
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.conio.postequorum.implementation.Configuration
 import com.conio.postequorum.implementation.SDKFactory
 import org.json.JSONObject
 import org.web3j.crypto.CipherException
 import org.web3j.crypto.Keys
 import org.web3j.crypto.Wallet
-
 import java.security.InvalidAlgorithmParameterException
 import java.security.NoSuchAlgorithmException
 import java.security.NoSuchProviderException
-import java.util.UUID.randomUUID
 
 
 @SuppressLint("Registered")
@@ -20,9 +18,12 @@ class PosteWelfareActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
         setContentView(com.ey.pwbc.R.layout.activity_main)
-
+        val conf = Configuration.ConfigurationBuilder(
+            "0x7eCb3410eB7644076b2992E9DB4A9F12a4fed12C",
+            "https://a0833b7c.ngrok.io"
+        ).build()
         //Create SDK instance
-        val sdk = SDKFactory.getInstance().createSDK()
+        val sdk = SDKFactory.getInstance().createSDK(conf)
 
         /*val seed = randomUUID().toString()
         val result = process(seed) // get a json containing private key and address
@@ -53,8 +54,6 @@ class PosteWelfareActivity : AppCompatActivity() {
 
         //In the event of an app outage, to retrieve the sdk while keeping the private and public key unchanged
         //the application will need to create an SDK instance by passing in the appropriately saved private key earlier
-
-        val sdk2 = SDKFactory.getInstance().createSDK(keysToBeSavedInSecureStorage)
 
 
     }

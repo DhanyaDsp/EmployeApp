@@ -20,24 +20,31 @@
             android:orientation="horizontal"
             android:weightSum="4">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/rounded_icon"
-                android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/img_voucher_image"
+                android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_weight=".5"
-                app:cardCornerRadius="250dp">
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop" />
 
-                <ImageView
-                    android:id="@+id/img_voucher_image"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="8dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_help" />
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:id="@+id/rounded_icon"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_weight=".5"-->
+<!--                app:cardCornerRadius="250dp">-->
 
-            </androidx.cardview.widget.CardView>
+<!--                <ImageView-->
+<!--                    android:id="@+id/img_voucher_image"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_margin="8dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/ic_help" />-->
+
+<!--            </androidx.cardview.widget.CardView>-->
 
             <!--        <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/img_voucher_image"
@@ -79,7 +86,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/view_voucher_item"
             android:layout_gravity="center"
-            android:layout_marginTop="5dp"
             android:text="-Nike Store"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="64dp"

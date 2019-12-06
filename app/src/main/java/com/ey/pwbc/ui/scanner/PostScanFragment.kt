@@ -39,7 +39,8 @@ class PostScanFragment : Fragment() {
         val root = inflater.inflate(R.layout.post_scan_fragment, container, false)
         root.ivClose.setOnClickListener {
             val navController = activity?.findNavController(R.id.nav_host_fragment)
-            navController?.popBackStack()
+            navController?.navigate(R.id.nav_wallet)
+            //navController?.popBackStack()
         }
         scanStatus?.let {
             if (scanStatus?.status == ScanStatus.STATUS_SUCCESS) {
@@ -67,11 +68,13 @@ class PostScanFragment : Fragment() {
         when (item.itemId) {
             R.id.close -> {
                 val navController = activity?.findNavController(R.id.nav_host_fragment)
-                navController?.popBackStack()
+//                navController?.navigatorProvider?.addNavigator("dahboard",R.id.nav_wallet)
+                navController?.navigate(R.id.nav_wallet)
+               // navController?.popBackStack()
                 return true;
             }
         }
-        return false;
+        return false
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

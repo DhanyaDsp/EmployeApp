@@ -25,6 +25,10 @@
 
     </style>
 
+    <style name="NavigationTheme" parent="AppTheme">
+        <item name="listPreferredItemHeightSmall">70dp</item>
+    </style>
+
     <style name="EdiText" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/dark_grey</item>
         <item name="android:textColorHint">@color/colorDarkAsh</item>
@@ -43,7 +47,9 @@
     <style name="landing" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:textColorPrimary">@color/colorPrimary</item>
     </style>
-
+    <style name="voucher_screen" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:textColorPrimary">@color/colorDarkBlack</item>
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

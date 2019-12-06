@@ -21,15 +21,4 @@ class LoginViewModel : ViewModel() {
         this.user.value = user;
     }
 
-    /*init {
-        this.user = User("", "")
-    }*/
-    //fun for login button clicked
-/*    fun onLoginClicked(view: View) {
-        if (user.isDataValid) {
-            listener.onSuccess("Login success")
-        } else
-            listener.onFailure("Login error")
-    }*/
-
 }
