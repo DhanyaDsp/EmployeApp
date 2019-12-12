@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">ll mio Wallet</string>
+    <string name="toLogin">Accedi al tuo Wallet</string>
+    <string name="user_name">Username</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Password dimenticata?</string>
+    <string name="private_key">Chiave Privata</string>
+    <string name="public_key">Chiave Publicca</string>
+    <string name="login">Accedi</string>
+    <string name="submit">Submit</string>
+    <string name="genera_qui_la_tua_coppia_di_chiavi">Genera qui la tua coppia di chiavi</string>
+    <string name="generate_key">Genera Chiave</string>
+    <string name="menu_wallet">Wallet</string>
+    <string name="menu_products">Prodotti</string>
+    <string name="menu_profile">Profilo</string>
+    <string name="menu_others">Altro</string>
+    <string name="voucher_utilization">Voucher da utilizzare</string>
+    <string name="Buy">Acquista</string>
+    <string name="voucher_title">"Dettaglio Voucher"</string>
+    <string name="Voucher">Voucher</string>
+    <string name="title_activity_landing">LandingActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="menu_vetrina">Vetrina</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_wallet_title">II Mio Wallet</string>
+    <string name="menu_profile_title">II Mio Profile</string>
+    <string name="menu_vetrina_title">II Mio Vetrina</string>
+    <string name="menu_logout_title">II Mio Logout</string>
+    <string name="name">Name</string>
+    <string name="e_mail">E-mail</string>
+    <string name="ok">Ok</string>
+    <string name="valore">Valore</string>
+    <string name="merchant">Merchant</string>
+    <string name="scandenza">Scandenza</string>
+    <string name="eseguito_da">Eseguito da</string>
+    <string name="transaction_success">Transazione eseguita!</string>
+    <string name="transaction_failed">Transazione Fallita!</string>
+    <string name="Help">Help</string>
+    <string name="cancel">Annulla</string>
+    <string name="confirm">Conferma</string>
+    <string name="transaction_success_msg">L\'acquisto del voucher e andato a buon fine</string>
+    <string name="transaction_success_added_to_voucher_list">Verifica che sia stato inserito  nella tua lista per iniziare a spenderlo!</string>
+    <string name="annulla">Annulla</string>
+    <string name="scanner_hint">Inquadra il QR code del prodotto per acquistare il voucher</string>
+    <string name="login_success">"Le tue chiavi sono state generate con successo"</string>
+    <string name="transfer_all_vouchers">"Le tue chiavi sono state generate con successo"</string>
+    <string name="elenco_voucher">"STIAMO ATTIVANDO IL TUO WALLET"</string>
+    <string name="attendi_i">"Attendi I attivazione del tuo Wallet per iniziare a ricevere i tuoi voucher"</string>
+    <string name="stiamo_attivando_il_tuo_wallet">STIAMO ATTIVANDO IL TUO WALLET</string>
+    <string name="voucher_emessi">Voucher Emessi</string>
+    <string name="voucher_trasferiti">Voucher Transferiti</string>
+
+
+</resources>
+

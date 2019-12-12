@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ey.pwbc.ui.wallet.VoucherItemViewModel" />
+
+        <variable
+            name="user"
+            type="com.ey.pwbc.model.User" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/view_voucher_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <ImageView
+                    android:id="@+id/img_voucher_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="8dp"
+                    android:scaleType="centerCrop" />
+
+
+                <TextView
+                    android:id="@+id/txt_voucher_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="2"
+                    android:text="viewModel.voucherName"
+                    android:textColor="@color/colorDarkBlack" />
+
+                <TextView
+                    android:id="@+id/txt_voucher_amount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="viewModel.voucherAmount"
+                    android:textColor="@color/colorDarkBlack">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_store_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view_voucher_item"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center"
+                android:layout_marginEnd="64dp"
+                android:text="viewModel.storeName"
+                android:textColor="@color/dark_grey"
+                app:layout_constraintEnd_toEndOf="parent">
+
+            </TextView>
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

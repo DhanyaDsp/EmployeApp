@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_employee_profile"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/ic_menu_profilo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </de.hdodenhof.circleimageview.CircleImageView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txt_input_layout_employee_profile_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="48dp"
+        app:hintTextAppearance="@style/EdiText"
+        app:layout_constraintTop_toBottomOf="@+id/img_employee_profile">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_employee_profile_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/colorDarkAsh"
+            android:editable="false"
+            android:hint="@string/name"
+            tools:ignore="Deprecated" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txt_input_layout_employee_profile_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="48dp"
+        android:layout_marginTop="8dp"
+        app:hintTextAppearance="@style/EdiText"
+        app:layout_constraintTop_toBottomOf="@+id/txt_input_layout_employee_profile_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_employee_profile_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            tools:ignore="Deprecated"
+            android:hint="@string/e_mail" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
