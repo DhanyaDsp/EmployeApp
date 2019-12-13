@@ -30,31 +30,25 @@ import java.math.BigInteger
 
 
 class KeyGenerationActivity : AppCompatActivity(), APICallback {
-    override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
-        Toast.makeText(this,"Request success ",Toast.LENGTH_SHORT).show()
 
-        Log.d("sos", "request code $requestCode")
-    }
-
-    override fun onFailure(requestCode: Int, obj: Any, code: Int) {
-        Toast.makeText(this,"Request failed ",Toast.LENGTH_SHORT).show()
-
-        Log.d("sos", "onFailure request code $requestCode")
-    }
-
-    override fun onProgress(requestCode: Int, isLoading: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     private lateinit var keyGenerateButton: Button
     private var privateKeyEditText: EditText? = null
     private var publicKeyEditText: EditText? = null
     private lateinit var sdk: SDK
     private var tokenRepo: TokenRepo? = null
+    private var userName: String? = null
+    private var contractAddress: String? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.key_generation_activity)
-
+        if (intent != null) {
+            userName = intent.getStringExtra("user_name")
+            contractAddress = intent.getStringExtra("contractAddress")
+            Log.d("sos", "getExtra contractAddress : $contractAddress")
+        }
         initialiseSDK()
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -96,11 +90,11 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
 
     }
 
-    fun getKeyAuthentication(callBack: APICallback) {
+    private fun getKeyAuthentication(callBack: APICallback) {
         val apiService: ApiInterface =
             ApiClient.getKeyAuthenticationDetails().create(ApiInterface::class.java)
         val call: Call<StoreKeyResponse> =
-            apiService.getKeyDetails(User.getFiscalCode(), User.getContractAddress())
+            apiService.getKeyDetails(generateFiscalCode(userName!!), "15808f10cacc31df73344c4a56c1de89127e0f22")
         Log.d("sos", "call request: " + call.request().url())
         call.enqueue(object : Callback<StoreKeyResponse> {
 
@@ -146,7 +140,7 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
 
     private fun initialiseSDK() {
         val conf = Configuration.ConfigurationBuilder(
-            "0x7eCb3410eB7644076b2992E9DB4A9F12a4fed12C",
+            "0x44C7174DA81681115d01F0340D695DC26FB8C38F",
             "https://18.223.41.243"
         ).build()
         //Create SDK instance
@@ -156,24 +150,22 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
         val savedPrivateKey = sdk.keyPair.serializePrivateKey();
         val savedPublicKey = sdk.keyPair.serializePublicKey();
 
-        val decryptedPrivateKey = android.util.Base64.encodeToString(
-            savedPrivateKey,
-            android.util.Base64.DEFAULT
-        )
-
-        val decryptedPublicKey = android.util.Base64.encodeToString(
-            savedPublicKey,
-            android.util.Base64.DEFAULT
-        )
-        privateKeyEditText?.setText("" + decryptedPrivateKey)
-        publicKeyEditText?.setText("" + decryptedPublicKey)
-        val tokenData = TokenData(decryptedPrivateKey.toString(), decryptedPublicKey.toString())
+        privateKeyEditText?.setText("" + savedPrivateKey)
+        publicKeyEditText?.setText("" + savedPublicKey)
+        val tokenData = TokenData(savedPrivateKey.toString(), savedPublicKey.toString())
         tokenRepo?.create(tokenData)
+
+        val sdkMerchantAccount = SDKFactory.getInstance().createSDK(savedPrivateKey, conf)
+        val employeeAddress = sdkMerchantAccount.keyPair.noPrefixAddress
+
+
+
+        Log.d("sos", "public key address from Employee SDK $employeeAddress")
+
 
 
         val publicKeyAddress = sdk.keyPair.noPrefixAddress
         Log.d("sos", "public key address from SDK $publicKeyAddress")
-        //FiscalCodeEmployee - LMTCLT70B45E472K
 
         val async = postWelfareAync()
         async.execute()
@@ -219,5 +211,38 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
 
             super.onPostExecute(result)
         }
+    }
+    private fun generateFiscalCode(userName: String): String {
+
+        var fiscalCode = ""
+        if (userName != null) {
+            if (userName == "employee1") {
+                fiscalCode = "RSSFLP58B10H501V"
+                return fiscalCode
+            } else if (userName == "employee2") {
+                fiscalCode = "VRDVLR88B10H544X"
+                return fiscalCode
+            } else if (userName == "employee3") {
+                fiscalCode = "BRBBNC72B10G100H"
+                return fiscalCode
+            }
+        }
+        return fiscalCode
+    }
+
+    override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
+        Toast.makeText(this,"Request success ",Toast.LENGTH_SHORT).show()
+
+        Log.d("sos", "request code $requestCode")
+    }
+
+    override fun onFailure(requestCode: Int, obj: Any, code: Int) {
+        Toast.makeText(this,"Request failed ",Toast.LENGTH_SHORT).show()
+
+        Log.d("sos", "onFailure request code $requestCode")
+    }
+
+    override fun onProgress(requestCode: Int, isLoading: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -44,7 +44,7 @@ class WalletFragment : Fragment() {
     private lateinit var refreshToken: TextView
     private lateinit var scanButton: FloatingActionButton
     private lateinit var zeroTokenView: ConstraintLayout
-    val user = User()
+    val user = User
 
     companion object {
         @JvmStatic
@@ -136,7 +136,7 @@ class WalletFragment : Fragment() {
                 LinearLayoutManager.VERTICAL
             )
         )
-        val adapter = VoucherListAdapter(activity!!, voucherList, user)
+        val adapter = VoucherListAdapter(activity!!, voucherList)
         voucherRV.adapter = adapter
     }
 
@@ -171,7 +171,7 @@ class WalletFragment : Fragment() {
             )
         )
 
-        val adapter = VoucherListAdapter(activity!!, voucherList, user)
+        val adapter = VoucherListAdapter(activity!!, voucherList)
         voucherRV.adapter = adapter
     }
 

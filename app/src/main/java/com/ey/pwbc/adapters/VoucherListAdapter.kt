@@ -20,8 +20,7 @@ import kotlinx.android.synthetic.main.voucher_list_item.view.*
 
 class VoucherListAdapter(
     private val context: Context,
-    private val voucherList: ArrayList<Voucher>,
-    private val user: User
+    private val voucherList: ArrayList<Voucher>
 ) :
     RecyclerView.Adapter<VoucherListAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
@@ -35,8 +34,6 @@ class VoucherListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItems(voucherList[position])
-        if (user.getUserType() == User.TYPE_MERCHANT)
-            holder.itemView.txt_store_name.visibility = View.GONE
     }
 
     override fun getItemCount(): Int {

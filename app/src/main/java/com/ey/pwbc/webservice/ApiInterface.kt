@@ -1,5 +1,6 @@
 package com.ey.pwbc.webservice
 
+import com.ey.pwbc.webservice.response.ContractAddressResponse
 import com.ey.pwbc.webservice.response.StoreKeyResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -17,6 +18,8 @@ public interface ApiInterface {
     @GET("employee/storePk/{param1}/{param2}")
     fun getKeyDetails(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<StoreKeyResponse>
 
+    @GET("all/getContractAddress/")
+    fun getContractAddress(): Call<ContractAddressResponse>
 
 
 }

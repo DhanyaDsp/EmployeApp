@@ -41,7 +41,7 @@ class LandingActivity : AppCompatActivity(), NavController.OnDestinationChangedL
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawerLayout: DrawerLayout
     var toolbar: Toolbar? = null;
-    var user = User()
+    var user = User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,36 +50,22 @@ class LandingActivity : AppCompatActivity(), NavController.OnDestinationChangedL
         initToolbar();
         drawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
-        if (user.getUserType() == User.TYPE_EMPLOYEE) {
-            navView.inflateMenu(R.menu.menu_employee)
-            appBarConfiguration = AppBarConfiguration(
-                setOf(
-                    R.id.nav_no_token_wallet,
-                    R.id.nav_profile,
-                    R.id.nav_vetrina,
-                    R.id.nav_logout
-                ), drawerLayout
-            )
-        } else {
-            navView.inflateMenu(R.menu.menu_merchant)
-            appBarConfiguration = AppBarConfiguration(
-                setOf(
-                    R.id.nav_no_token_wallet,
-                    R.id.nav_profile,
-                    R.id.nav_emessi,
-                    R.id.nav_transferiti,
-                    R.id.nav_logout
-                ), drawerLayout
-            )
-        }
+
+        navView.inflateMenu(R.menu.menu_employee)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.nav_no_token_wallet,
+                R.id.nav_profile,
+                R.id.nav_vetrina,
+                R.id.nav_logout
+            ), drawerLayout
+        )
+
         val navController = findNavController(R.id.nav_host_fragment)
         navController.addOnDestinationChangedListener(this)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        if (user.getUserType() == User.TYPE_MERCHANT) {
-            moveToMerchantWelcomeScreen()
-        }
     }
 
     private fun initToolbar() {
@@ -116,10 +102,6 @@ class LandingActivity : AppCompatActivity(), NavController.OnDestinationChangedL
         }
     }
 
-    private fun moveToMerchantWelcomeScreen() {
-        val navController = this.findNavController(R.id.nav_host_fragment)
-        navController.navigate(R.id.nav_merchant_welcome)
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

@@ -2,14 +2,9 @@ package com.ey.pwbc.webservice
 
 import com.ey.pwbc.Utils.HttpClientService
 import com.ey.pwbc.webservice.Url.Companion.BASE_URL
-import com.ey.pwbc.webservice.Url.Companion.GET_CONTRACT_ADDRESS
-import com.ey.pwbc.webservice.Url.Companion.KEY_AUTHENTICATION
-import org.web3j.abi.Utils
+import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.google.gson.GsonBuilder
-import com.google.gson.Gson
-
 
 
 class ApiClient {
@@ -35,7 +30,7 @@ class ApiClient {
 
         fun getContractAddress(): Retrofit {
             return Retrofit.Builder()
-                .baseUrl(GET_CONTRACT_ADDRESS)
+                .baseUrl(BASE_URL)
                 .client(HttpClientService.getUnsafeOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

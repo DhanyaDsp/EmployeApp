@@ -28,19 +28,16 @@ class VoucherDetailActivity : AppCompatActivity() {
     private lateinit var viewModel: VoucherDetailViewModel
     private lateinit var binding: ActivityVoucherDetailBinding
     var toolbar: Toolbar? = null;
-    val user = User()
+    val user = User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         initBinding()
         initToolbar()
-        val intent  = intent
+        val intent = intent
         val prod = intent.data.toString()
-        Log.d("os","data $prod")
+        Log.d("os", "data $prod")
 
-        if (user.getUserType() == User.TYPE_MERCHANT) {
-            removeEmployeeField()
-        }
     }
 
 
@@ -69,27 +66,17 @@ class VoucherDetailActivity : AppCompatActivity() {
 
     fun onVoucherRedeemClick(view: View) {
         viewModel.onVoucherClick1()
-        if (user.getUserType() == User.TYPE_EMPLOYEE) {
-            UtilsDialog.showAlert(
-                "ll  tuo Voucher verra trasferito ad Adidas Store",
-                "Confermi?",
-                this,
-                View.OnClickListener { moveToPostRedeemVoucher() },
-                View.OnClickListener { },
-                View.OnClickListener { },
-                UtilsDialog.TYPE_CONFIRM
-            )
-        } else {
-            UtilsDialog.showAlert(
-                "ll  tuo Voucher verra trasferito a Poste Italiane",
-                "Confermi il trasferimento?",
-                this,
-                View.OnClickListener { moveToPostRedeemVoucher() },
-                View.OnClickListener { },
-                View.OnClickListener { },
-                UtilsDialog.TYPE_CONFIRM
-            )
-        }
+
+        UtilsDialog.showAlert(
+            "ll  tuo Voucher verra trasferito ad Adidas Store",
+            "Confermi?",
+            this,
+            View.OnClickListener { moveToPostRedeemVoucher() },
+            View.OnClickListener { },
+            View.OnClickListener { },
+            UtilsDialog.TYPE_CONFIRM
+        )
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -112,26 +99,15 @@ class VoucherDetailActivity : AppCompatActivity() {
             this.findViewById<ConstraintLayout>(com.ey.pwbc.R.id.view_post_redeem_voucher)
         val closeImageView = this.findViewById<ImageView>(com.ey.pwbc.R.id.ivClose)
 
-        if (user.getUserType() == User.TYPE_EMPLOYEE) {
 
-            redeemVoucherView.visibility = View.VISIBLE
-            closeImageView.setOnClickListener {
-                //  hideToolbar()
-                intent = Intent(this, LandingActivity::class.java)
-                startActivityForResult(intent, 101)
-                //startActivity(intent)
-                //redeemVoucherView.visibility = View.GONE
-            }
 
-        } else if (user.getUserType() == User.TYPE_MERCHANT) {
-            redeemVoucherView.visibility = View.VISIBLE
-            redeemVoucherView.tvMsg1.text = "II tuo voucher e stato trasferito a Poste Italiane!"
-            redeemVoucherView.tvMsg2.text = "A breve riceverai il bonifico all'lBAN IT1234567787"
-
-            closeImageView.setOnClickListener {
-                //  hideToolbar()
-                redeemVoucherView.visibility = View.GONE
-            }
+        redeemVoucherView.visibility = View.VISIBLE
+        closeImageView.setOnClickListener {
+            //  hideToolbar()
+            intent = Intent(this, LandingActivity::class.java)
+            startActivityForResult(intent, 101)
+            //startActivity(intent)
+            //redeemVoucherView.visibility = View.GONE
         }
     }
 
@@ -140,10 +116,4 @@ class VoucherDetailActivity : AppCompatActivity() {
         return true
     }
 
-    private fun removeEmployeeField() {
-        val performedBy = this.findViewById<RelativeLayout>(R.id.rl_performed_by)
-        val voucherTransferButton = this.findViewById<Button>(R.id.btn_use_voucher)
-        performedBy.visibility = View.GONE
-        voucherTransferButton.text = "TRASFERISCI VOUCHER";
-    }
 }
