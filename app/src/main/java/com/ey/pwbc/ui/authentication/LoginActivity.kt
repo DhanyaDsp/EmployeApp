@@ -63,7 +63,6 @@ class LoginActivity : AppCompatActivity(), APICallback {
         user =
             User(edt_login_username.text.toString(), txt_input_text_password.text.toString(), 0)
         binding.user = user
-
         if (user!!.isDataValid) {
             loginViewModel.onLoginClicked(user!!)
         } else {
@@ -141,14 +140,12 @@ class LoginActivity : AppCompatActivity(), APICallback {
     }
 
     private fun moveToKeyGenerationScreen(userType: Int) {
-        if (userType == User.TYPE_EMPLOYEE || userType == User.TYPE_MERCHANT) {
-            //we have to pass the user type to the SDK
-            val intent = Intent(this, KeyGenerationActivity::class.java)
-            intent.putExtra("user_name", user?.getUserName())
-            intent.putExtra("password", user?.getPassword())
-            intent.putExtra("contractAddress", contractAddress)
-            startActivity(intent)
-        }
+        Log.d("sos", "user: " + user?.getUserName())
+        val intent = Intent(this, KeyGenerationActivity::class.java)
+        intent.putExtra("user_name", user?.getUserName())
+        intent.putExtra("password", user?.getPassword())
+        intent.putExtra("contractAddress", contractAddress)
+        startActivity(intent)
     }
 
 

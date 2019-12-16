@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="deepLinkData"
+            type="com.ey.pwbc.model.ScanData" />
         <variable
             name="voucherDetailViewModel"
             type="com.ey.pwbc.ui.product.VoucherDetailViewModel" />
@@ -76,7 +78,7 @@
                             android:layout_marginTop="@dimen/margin_5dp"
                             android:editable="false"
                             android:background="@drawable/bottom_border_line"
-                            android:text="Cappello Bianco Adidas"
+                            android:text="@={deepLinkData.name}"
                             android:textColor="#000"
                             android:textSize="@dimen/primary_heading" />
                     </RelativeLayout>

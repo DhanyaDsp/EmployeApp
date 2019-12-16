@@ -41,11 +41,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="pwbc"
-                    android:pathPrefix="/prod"
-                    android:scheme="myscheme" />
-
-                <!--                    url: myscheme://pwbc/prod/-->
+                    android:host="postewelfare"
+                    android:pathPrefix="/scan/prod"
+                    android:scheme="postewelfareapp" />
 
 
             </intent-filter>

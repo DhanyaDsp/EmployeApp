@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.ey.pwbc.R
 import com.ey.pwbc.UtilsDialog
 import com.ey.pwbc.databinding.ActivityVoucherDetailBinding
+import com.ey.pwbc.model.ScanData
 import com.ey.pwbc.model.User
 import com.ey.pwbc.ui.dashboard.LandingActivity
 import kotlinx.android.synthetic.main.app_bar_landing.*
@@ -27,16 +28,28 @@ import kotlinx.android.synthetic.main.post_scan_fragment.view.*
 class VoucherDetailActivity : AppCompatActivity() {
     private lateinit var viewModel: VoucherDetailViewModel
     private lateinit var binding: ActivityVoucherDetailBinding
+    private var deepLinkData: ScanData? = null
     var toolbar: Toolbar? = null;
     val user = User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        if (intent != null) {
+            val intent = intent
+            val prod = intent.data.toString()
+            Log.d("sos", "data:  ${intent.data}")
+            val array = prod.split(",")
+            val scanData = ScanData(array[0], "", "", "")
+            Log.d("sos", "deeplinking name 1: ${scanData.name}")
+            Log.d("sos", "deeplinking size: ${array.size}")
+            Log.d("sos", "deeplinking name: ${array[0]}")
+            if (array.size == 4) {
+
+            }
+        }
         initBinding()
         initToolbar()
-        val intent = intent
-        val prod = intent.data.toString()
-        Log.d("os", "data $prod")
 
     }
 
@@ -53,7 +66,7 @@ class VoucherDetailActivity : AppCompatActivity() {
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, com.ey.pwbc.R.layout.activity_voucher_detail)
         binding.lifecycleOwner = this
-
+        binding.deepLinkData = deepLinkData;
         viewModel = ViewModelProviders.of(this).get(VoucherDetailViewModel::class.java)
         binding.voucherDetailViewModel = viewModel
         //if we need to update the voucher fields from the edittext then we can add a voucher model here and bind it with layout.

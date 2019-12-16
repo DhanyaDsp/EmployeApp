@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 public class TokenDBHelper extends OrmLiteSqliteOpenHelper {
 
-    private static final String DATABASE_NAME = "TokensDB.db";
+    private static final String DATABASE_NAME = "TokensDB_PWBC.db";
     private static final int DATABASE_VERSION = 1;
 
     // database access objects
