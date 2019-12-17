@@ -104,7 +104,7 @@
                             android:layout_below="@+id/tv_value"
                             android:layout_marginTop="@dimen/margin_5dp"
                             android:background="@drawable/bottom_border_line"
-                            android:text="20 WT"
+                            android:text="@={deepLinkData.value}"
                             android:editable="false"
                             android:textColor="#000"
                             android:textSize="@dimen/primary_heading" />
@@ -131,7 +131,7 @@
                             android:layout_below="@+id/tv_merchant"
                             android:layout_marginTop="@dimen/margin_5dp"
                             android:editable="false"                            android:background="@drawable/bottom_border_line"
-                            android:text="Adidas Store"
+                            android:text="@={deepLinkData.merchant}"
                             android:textColor="#000"
                             android:textSize="@dimen/primary_heading" />
                     </RelativeLayout>
@@ -157,7 +157,7 @@
                             android:layout_below="@+id/tv_deadline"
                             android:layout_marginTop="@dimen/margin_5dp"
                             android:background="@drawable/bottom_border_line"
-                            android:text="31/12/2019"
+                            android:text="@={deepLinkData.date}"
                             android:editable="false"
                             android:textColor="#000"
                             android:textSize="@dimen/primary_heading" />
