@@ -95,7 +95,7 @@ dependencies {
     implementation 'info.androidhive:barcode-reader:1.1.5'
     implementation 'com.karumi:dexter:6.0.0'
 
-    implementation ('com.conio.postequorum:poste-quorum:1.0.18') {
+    implementation ('com.conio.postequorum:poste-quorum:1.0.19') {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-compiler-embeddable'
     }
 

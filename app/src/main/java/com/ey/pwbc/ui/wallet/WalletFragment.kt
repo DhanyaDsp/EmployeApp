@@ -2,6 +2,7 @@ package com.ey.pwbc.ui.wallet
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,13 +22,27 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.conio.postequorum.implementation.SDKFactory
 import com.ey.pwbc.R
+import com.ey.pwbc.Utils.Utils
 import com.ey.pwbc.adapters.VoucherListAdapter
+import com.ey.pwbc.database.TokenData
+import com.ey.pwbc.database.TokenRepo
 import com.ey.pwbc.model.User
 import com.ey.pwbc.model.Voucher
 import com.ey.pwbc.ui.scanner.ScanActivity
+import com.ey.pwbc.webservice.APICallback
+import com.ey.pwbc.webservice.ApiClient
+import com.ey.pwbc.webservice.ApiInterface
+import com.ey.pwbc.webservice.response.StoreKeyResponse
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.wallet_fragment.view.*
+import org.web3j.tuples.generated.Tuple2
+import org.web3j.tuples.generated.Tuple3
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.math.BigInteger
 
 
 class WalletFragment : Fragment() {
@@ -39,11 +54,13 @@ class WalletFragment : Fragment() {
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var purchaseVoucherView: RelativeLayout
     private lateinit var voucherListTitle: TextView
-    private lateinit var tokenBalance: TextView
+    private lateinit var tokenBalanceView: TextView
     private lateinit var tokenValue: TextView
     private lateinit var refreshToken: TextView
     private lateinit var scanButton: FloatingActionButton
     private lateinit var zeroTokenView: ConstraintLayout
+    private var tokenRepo: TokenRepo? = null
+
     val user = User
 
     companion object {
@@ -109,7 +126,7 @@ class WalletFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar)
         purchaseVoucherView = view.findViewById(R.id.view_purchase_voucher)
         voucherListTitle = view.findViewById(R.id.txt_voucher_utilization)
-        tokenBalance = view.findViewById(R.id.txt_token_balance)
+        tokenBalanceView = view.findViewById(R.id.txt_token_balance)
         tokenValue = view.findViewById(R.id.txt_token_value)
         refreshToken = view.findViewById(R.id.txt_refresh_view)
         scanButton = view.findViewById(R.id.civScan)
@@ -200,26 +217,95 @@ class WalletFragment : Fragment() {
         scanButton.visibility = View.GONE
         voucherListTitle.visibility = View.GONE
 
-        tokenBalance.text = " WT 0"
+        tokenBalanceView.text = " WT 0"
         tokenValue.text = " WT 0"
         refreshToken.setOnClickListener {
-            refreshTokenBalance()
-
+            PostWelfareAsync().execute()
         }
 
     }
 
     @SuppressLint("RestrictedApi")
-    private fun refreshTokenBalance() {
+    private fun refreshTokenBalance():Tuple3<BigInteger, BigInteger, List<BigInteger>>{
         // API call
-        zeroTokenView.visibility = View.GONE
-        tokenBalance.text = " WT 55"
-        tokenValue.text = " WT 45"
-        voucherRV.visibility = View.VISIBLE
-        purchaseVoucherView.visibility = View.VISIBLE
-        scanButton.visibility = View.VISIBLE
-        voucherListTitle.visibility = View.VISIBLE
+        val tokenData = Utils.getKeyFromDB(activity)
+        val privateKeyByteArray: ByteArray = android.util.Base64.decode(tokenData.component1(), android.util.Base64.DEFAULT)
+        return displayBalance(privateKeyByteArray)
+    }
 
+    @SuppressLint("RestrictedApi")
+    private fun displayBalance(privateKey: ByteArray) :Tuple3<BigInteger, BigInteger, List<BigInteger>>{
+        val dummyPrivateKey = byteArrayOf(
+            26,
+            1,
+            -93,
+            -125,
+            -43,
+            -76,
+            -85,
+            51,
+            6,
+            75,
+            48,
+            -100,
+            9,
+            20,
+            -34,
+            117,
+            87,
+            103,
+            -111,
+            -21,
+            70,
+            112,
+            1,
+            90,
+            25,
+            -3,
+            15,
+            125,
+            110,
+            -18,
+            -92,
+            0
+        )
+        val sdkEmployee = SDKFactory.getInstance().createSDK(dummyPrivateKey, Utils.getConf())
+//        val sdkEmployee = SDKFactory.getInstance().createSDK(privateKey, Utils.getConf())
+        val employeeAddress = sdkEmployee.keyPair.noPrefixAddress
+        val tokenBalance = sdkEmployee.myTokenBalance()
+        val voucherBalance = sdkEmployee.myVouchersBalance().component1()
+//        val employeeVoucherList = sdkEmployee.myVouchersList()
+
+        val employeeVoucherList = ArrayList<BigInteger>()
+        employeeVoucherList.add(BigInteger.ONE)
+        employeeVoucherList.add(BigInteger.TEN)
+        return Tuple3(tokenBalance,voucherBalance,employeeVoucherList)
 
     }
+
+    inner class PostWelfareAsync : AsyncTask<Void, Void, Tuple3<BigInteger, BigInteger, List<BigInteger>>>() {
+        override fun doInBackground(vararg params: Void?): Tuple3<BigInteger, BigInteger, List<BigInteger>> {
+            try {
+                return refreshTokenBalance()
+            } catch (e: Exception) {
+
+                Log.d("sos,", "AsyncTask exception:  ${e.localizedMessage}")
+            }
+            return Tuple3(BigInteger.ZERO,BigInteger.ZERO, arrayListOf<BigInteger>())
+        }
+
+        @SuppressLint("RestrictedApi")
+        override fun onPostExecute(result: Tuple3<BigInteger, BigInteger, List<BigInteger>>) {
+            super.onPostExecute(result)
+            // API call
+            zeroTokenView.visibility = View.GONE
+            tokenBalanceView.text = " WT "+result.component1()
+            tokenValue.text = " WT "+result.component2()
+            voucherRV.visibility = View.VISIBLE
+            purchaseVoucherView.visibility = View.VISIBLE
+            scanButton.visibility = View.VISIBLE
+            voucherListTitle.visibility = View.VISIBLE
+        }
+    }
+
 }

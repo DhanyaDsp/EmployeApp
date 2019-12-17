@@ -22,5 +22,7 @@ public interface ApiInterface {
     @GET("postewelfare/REST/all/getContractAddress")
     fun getContractAddress(): Call<ContractAddressResponse>
 
+    @GET("postewelfare/REST/employee/buyVoucherInit/{param1}/{param2}")
+    fun buyVoucherInit(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<ContractAddressResponse>
 
 }

@@ -17,19 +17,19 @@ import com.conio.postequorum.implementation.Configuration
 import com.conio.postequorum.implementation.SDKFactory
 
 import com.ey.pwbc.R
+import com.ey.pwbc.Utils.Utils
 import com.ey.pwbc.database.TokenDBManager
 import com.ey.pwbc.database.TokenData
 import com.ey.pwbc.database.TokenRepo
-import com.ey.pwbc.model.User
 import com.ey.pwbc.ui.dashboard.LandingActivity
 import com.ey.pwbc.webservice.*
 import com.ey.pwbc.webservice.response.StoreKeyResponse
 import org.bouncycastle.pqc.math.linearalgebra.ByteUtils
+import org.web3j.tuples.generated.Tuple2
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.math.BigInteger
-import java.nio.charset.StandardCharsets
 
 
 class KeyGenerationActivity : AppCompatActivity(), APICallback {
@@ -54,7 +54,6 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
             Log.d("sos", "getExtra contractAddress : $contractAddress")
         }
 
-
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         supportActionBar?.title = getString(R.string.app_name)
         privateKeyEditText = findViewById(R.id.edt_key_generation_primary_key)
@@ -63,18 +62,9 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
 
         TokenDBManager.init(this)
         tokenRepo = TokenRepo()
-        initialiseSDK()
-
-
-//        keyGenerateButton.setOnClickListener {
-//
-//            runOnUiThread {
-//                if (employeeAddress != null)
-//                    //getKeyAuthentication(this, employeeAddress!!)
-//                successAlert("Le tue chiavi sono state generate con successo")
-//            }
-//        }
-
+        keyGenerateButton.setOnClickListener {
+            initialiseSDK()
+        }
     }
 
     private fun successAlert(message: String) {
@@ -94,35 +84,32 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
         dialog_card.show();
     }
 
-
     private fun initialiseSDK() {
-
         val async = PostWelfareAsync()
         async.execute()
     }
 
     @SuppressLint("StaticFieldLeak")
-    inner class PostWelfareAsync : AsyncTask<Void, Void, Void>() {
-        override fun doInBackground(vararg params: Void?): Void? {
-
+    inner class PostWelfareAsync : AsyncTask<Void, Void, Tuple2<String, String>>() {
+        override fun doInBackground(vararg params: Void?): Tuple2<String, String> {
             try {
-                val conf = getConf()
-
-                val retrivedPrivateKeyFromDB = tokenRepo?.findAll() as List<TokenData>
-                if (retrivedPrivateKeyFromDB.size > 0) {
-                    val privateKeyFromDB = retrivedPrivateKeyFromDB[0].privateKey
+                val conf = Utils.getConf()
+                val retrievedPrivateKeyFromDB = tokenRepo?.findAll() as List<TokenData>
+                if (retrievedPrivateKeyFromDB.isNotEmpty()) {
+                    val privateKeyFromDB = retrievedPrivateKeyFromDB[0].privateKey
+                    val publicKeyFromDB = retrievedPrivateKeyFromDB[0].publicKey
                     if (privateKeyFromDB != null) {
-                        val privateKeyByteArray: ByteArray = privateKeyFromDB.toByteArray()
-                        Log.d("sos", "private key 2nd time**:  $privateKeyFromDB")
-                        generateEmployeeAccountFromPrivateKey(privateKeyByteArray)
-
+                        return Tuple2(privateKeyFromDB, publicKeyFromDB)
+//                        val privateKeyByteArray: ByteArray = android.util.Base64.decode(privateKeyFromDB, android.util.Base64.DEFAULT)
+//                        Log.d("sos", "private key 2nd time**:  $privateKeyFromDB")
+//                        generateEmployeeAccountFromPrivateKey(privateKeyByteArray)
                     } else {
                         Toast.makeText(applicationContext, "Impossible case", Toast.LENGTH_SHORT)
                             .show()
                     }
                 } else {
-                    val privateKeyByteArray = firstTimeSetup()
-                    generateEmployeeAccountFromPrivateKey(privateKeyByteArray)
+                    return firstTimeSetup()
+//                    generateEmployeeAccountFromPrivateKey(privateKeyByteArray)
                 }
 
 
@@ -130,35 +117,11 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
                 throw e
                 Log.d("sos,", "AsyncTask exception:  ${e.localizedMessage}")
             }
-
-
-//            //  Calculate productHash from qrcode data:
-//            val str = "0x20fB247Ced04CdA18eA78EE8D9Aa79948e516a8B"
-//            var productHash = sdk.computeProductHash(
-//                "LAVATRICE",
-//                "987",
-//                BigInteger.valueOf(str.toLong()),
-//                BigInteger.valueOf(1576882799)
-//            )
-//
-//            val productHashHex = ByteUtils.toHexString(productHash)
-//
-//            Log.d("sos","productHashHex $productHashHex")
-//
-//            sdk.dipendente().buyVoucher(productHash);
-
-
-//            Log.d("sos ", "BigInteger: " + BigInteger("096057bc9b0ba0406d050d0b6866fad8ac64a588"))
-//            var msg =  "Hi Techrocksz!";
-//            BigInteger bi = new BigInteger(msg.getBytes());
-//            System.out.println(new String (bi.toByteArray()));
-
-            return null
-
+            return Tuple2("", "")
         }
 
-        private fun firstTimeSetup(): ByteArray {
-            sdk = SDKFactory.getInstance().createSDK(getConf())
+        private fun firstTimeSetup(): Tuple2<String, String> {
+            sdk = SDKFactory.getInstance().createSDK(Utils.getConf())
             val privateKey = sdk.keyPair.serializePrivateKey();
             val publicKey = sdk.keyPair.serializePublicKey();
 
@@ -170,8 +133,6 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
                 publicKey,
                 android.util.Base64.DEFAULT
             )
-//            val privateKeyAsString: String = String(privateKey, StandardCharsets.UTF_8)
-//            val publicKeyAsString: String = String(publicKey, StandardCharsets.UTF_8)
             Log.d("sos", "private key**:  $privateKeyAsString")
             Log.d("sos", "public key**:  $publicKeyAsString")
 
@@ -179,44 +140,45 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
                 TokenData(privateKeyAsString, publicKeyAsString)
             tokenRepo?.create(tokenSavedPrivateKeyData)
 
-            val retrivedPrivateKeyFromDB = tokenRepo?.findAll() as List<TokenData>
-            val privateKeyFromDB = retrivedPrivateKeyFromDB[0].privateKey
-            val publicKeyFromDB = retrivedPrivateKeyFromDB[0].publicKey
-            Log.d("sos", "DB retrival private key**:  $privateKeyFromDB")
-            Log.d("sos", "DB retrival public key**:  $publicKeyFromDB")
-            return privateKey
+            getKeyAuthentication(object : APICallback {
+                override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onFailure(requestCode: Int, obj: Any, code: Int) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onProgress(requestCode: Int, isLoading: Boolean) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            }, Utils.getEmployeeAddress(privateKey))
+            return Tuple2(privateKeyAsString, publicKeyAsString)
         }
 
-        override fun onPostExecute(result: Void?) {
-
+        override fun onPostExecute(result: Tuple2<String, String>) {
             super.onPostExecute(result)
+            privateKeyEditText?.setText(result.component1())
+            publicKeyEditText?.setText(result.component2())
+            successAlert("Le tue chiavi sono state generate con successo")
         }
     }
 
-    private fun getConf(): Configuration? {
-        return Configuration.ConfigurationBuilder(
-            "0xa07A306235ef748EC11cFfd373d9B9a21010A522",
-            "http://postewelfareapi.westeurope.cloudapp.azure.com:22100/"
-        ).build()
+    override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
+        Toast.makeText(this, "Request success ", Toast.LENGTH_SHORT).show()
+        Log.d("sos", "request code $requestCode")
     }
 
-    private fun generateEmployeeAccountFromPrivateKey(privateKey: ByteArray) {
-        val sdkTempEmployeeAccount =
-            SDKFactory.getInstance().createSDK(privateKey, getConf())
-        val employeeAddress = sdkTempEmployeeAccount.keyPair.noPrefixAddress
-        Log.d("sos", "employeeAddress**:   $employeeAddress")
-        val tokenBalance = sdkTempEmployeeAccount.myTokenBalance()
-        Log.d("sos", "tokenBalance**:   $tokenBalance")
+    override fun onFailure(requestCode: Int, obj: Any, code: Int) {
+        Toast.makeText(this, "Request failed ", Toast.LENGTH_SHORT).show()
+        Log.d("sos", "onFailure request code $requestCode")
+    }
 
-        val voucherBalance = sdkTempEmployeeAccount.myVouchersBalance()
-        val employeeVoucherList = sdkTempEmployeeAccount.myVouchersList()
-
-        Log.d("sos", "voucherBalance**:   ${voucherBalance.component1().toString()}")
-        Log.d("sos", "employeeVoucherList**:   ${employeeVoucherList.get(0).toString()}")
+    override fun onProgress(requestCode: Int, isLoading: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun generateFiscalCode(userName: String): String {
-
         var fiscalCode = ""
         if (userName != null) {
             if (userName == "employee1") {
@@ -279,7 +241,6 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
                             102, storeKeyResponse.getMessage(), response.code()
                         )
                     }
-
                 } else {
                     storeKeyResponse = StoreKeyResponse();
                     storeKeyResponse.setMessage("Failed to load the Key Details!")
@@ -290,25 +251,6 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
                     )
                 }
             }
-
         })
-
     }
-
-    override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
-        Toast.makeText(this, "Request success ", Toast.LENGTH_SHORT).show()
-
-        Log.d("sos", "request code $requestCode")
-    }
-
-    override fun onFailure(requestCode: Int, obj: Any, code: Int) {
-        Toast.makeText(this, "Request failed ", Toast.LENGTH_SHORT).show()
-
-        Log.d("sos", "onFailure request code $requestCode")
-    }
-
-    override fun onProgress(requestCode: Int, isLoading: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 }
