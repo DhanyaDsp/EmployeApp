@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -31,19 +32,48 @@ class VoucherDetailActivity : AppCompatActivity() {
     private var deepLinkData: ScanData? = null
     var toolbar: Toolbar? = null;
     val user = User
+    private var et_name: EditText? = null
+    private var et_value: EditText? = null
+    private var et_merchant: EditText? = null
+    private var et_deadline: EditText? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        et_name = findViewById(R.id.et_name)
+        et_value = findViewById(R.id.et_value)
+        et_merchant = findViewById(R.id.et_merchant)
+        et_deadline = findViewById(R.id.et_deadline)
 
         if (intent != null) {
             val intent = intent
             val prod = intent.data.toString()
             Log.d("sos", "data:  ${intent.data}")
             val array = prod.split(",")
-            val scanData = ScanData(array[0], "", "", "")
-            Log.d("sos", "deeplinking name 1: ${scanData.name}")
-            Log.d("sos", "deeplinking size: ${array.size}")
-            Log.d("sos", "deeplinking name: ${array[0]}")
+            if (intent.data == null) {
+                val scanData = ScanData("", "20 WT", "Adidas Store", "21/12/2019")
+
+                deepLinkData = scanData
+
+                et_name?.setText(scanData.name)
+                et_value?.setText(scanData.value)
+                et_merchant?.setText(scanData.merchant)
+                et_deadline?.setText(scanData.date)
+            } else {
+                val scanData = ScanData(array[0], array[1], array[2], array[3])
+
+                deepLinkData = scanData
+
+                Log.e("###sos","deeplinking  name : "+scanData.name)
+                Log.e("###sos","deeplinking  value : "+scanData.value)
+                Log.e("###sos","deeplinking  merchant : "+scanData.merchant)
+                Log.e("###sos","deeplinking  date : "+scanData.date)
+
+                et_name?.setText(scanData.name)
+                et_value?.setText(scanData.value)
+                et_merchant?.setText(scanData.merchant)
+                et_deadline?.setText(scanData.date)
+            }
+
             if (array.size == 4) {
 
             }

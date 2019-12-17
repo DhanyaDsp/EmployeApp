@@ -16,7 +16,6 @@ public interface ApiInterface {
 //    fun getKeyDetails(@retrofit2.http.Url url: String): Call<StoreKeyResponse>
 
     @GET("postewelfare/REST/employee/storePk/{param1}/{param2}")
-
     fun getKeyDetails(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<StoreKeyResponse>
 
     @GET("postewelfare/REST/all/getContractAddress")
@@ -25,4 +24,18 @@ public interface ApiInterface {
     @GET("postewelfare/REST/employee/buyVoucherInit/{param1}/{param2}")
     fun buyVoucherInit(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<ContractAddressResponse>
 
+    @GET("postewelfare/REST/employee/buyVoucherConfirm/{param1}/{param2}/{param3}")
+    fun confirmBuyVoucher(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String, @Path(value = "param3") param3: String): Call<ContractAddressResponse>
+
+    @GET("postewelfare/REST/employee/buyVoucherRollback/{param1}")
+    fun cancelBuyVoucher (@Path(value = "param1") param1: String): Call<ContractAddressResponse>
+
+    @GET("postewelfare/REST/employee/buyVoucherInit/{param1}/{param2}")
+    fun reedemVoucherInit(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<ContractAddressResponse>
+
+    @GET("postewelfare/REST/employee/buyVoucherInit/{param1}/{param2}")
+    fun reedemVoucherConfirm(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<ContractAddressResponse>
+
+    @GET("postewelfare/REST/employee/buyVoucherRollback/{param1}")
+    fun reedemVoucherRollback (@Path(value = "param1") param1: String): Call<ContractAddressResponse>
 }

@@ -23,12 +23,51 @@ class ApiClient {
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(HttpClientService.getUnsafeOkHttpClient())
-                .client(HttpClientService.getUnsafeOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
         }
 
         fun getContractAddress(): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(HttpClientService.getUnsafeOkHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        }
+
+        fun confirmBuyVoucher(): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(HttpClientService.getUnsafeOkHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        }
+
+        fun cancelBuyVoucher(): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(HttpClientService.getUnsafeOkHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        }
+
+        fun reedemVoucherInit(): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(HttpClientService.getUnsafeOkHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        }
+
+        fun reedemVoucherConfirm(): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(HttpClientService.getUnsafeOkHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        }
+
+        fun reedemVoucherRollback(): Retrofit {
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(HttpClientService.getUnsafeOkHttpClient())
