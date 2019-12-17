@@ -86,8 +86,11 @@ class ScanActivity : AppCompatActivity(), PermissionListener, BarcodeReader.Barc
     override fun onScanned(barcode: Barcode?) {
         val rawValue = barcode?.rawValue;
         Log.d("sos", "camera scan : $rawValue")
-        flContainer.visibility = View.VISIBLE
-        scanner_overlay.visibility = View.GONE
+        runOnUiThread {
+            flContainer.visibility = View.VISIBLE
+            scanner_overlay.visibility = View.GONE
+        }
+
         val array = rawValue?.split(",")
         if (array?.size == 4) {
             barcodeReader?.playBeep();

@@ -1,6 +1,7 @@
 package com.ey.pwbc.Utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.conio.postequorum.SDK;
 import com.conio.postequorum.implementation.Configuration;
@@ -26,48 +27,49 @@ public class Utils {
     }
 
     public static Configuration getConf(){
-        return new Configuration.ConfigurationBuilder("0xa07A306235ef748EC11cFfd373d9B9a21010A522",
+        return new Configuration.ConfigurationBuilder("0x20fB247Ced04CdA18eA78EE8D9Aa79948e516a8B",
                 "http://51.105.229.99:22100/"
         ).build();
     }
 
     public static String getEmployeeAddress(byte[] privateKey){
-        byte[] dummyPrivateKey = new byte[]{
-                26,
-                1,
-                -93,
-                -125,
-                -43,
-                -76,
-                -85,
-                51,
-                6,
-                75,
-                48,
-                -100,
-                9,
-                20,
-                -34,
-                117,
-                87,
-                103,
-                -111,
-                -21,
-                70,
-                112,
-                1,
-                90,
-                25,
-                -3,
-                15,
-                125,
-                110,
-                -18,
-                -92,
-                0
-        };
-        SDK sdkEmployee = SDKFactory.getInstance().createSDK(dummyPrivateKey, Utils.getConf());
-//        SDK sdkEmployee = SDKFactory.getInstance().createSDK(privateKey, Utils.getConf());
+//        byte[] dummyPrivateKey = new byte[]{
+//                26,
+//                1,
+//                -93,
+//                -125,
+//                -43,
+//                -76,
+//                -85,
+//                51,
+//                6,
+//                75,
+//                48,
+//                -100,
+//                9,
+//                20,
+//                -34,
+//                117,
+//                87,
+//                103,
+//                -111,
+//                -21,
+//                70,
+//                112,
+//                1,
+//                90,
+//                25,
+//                -3,
+//                15,
+//                125,
+//                110,
+//                -18,
+//                -92,
+//                0
+//        };
+//        SDK sdkEmployee = SDKFactory.getInstance().createSDK(dummyPrivateKey, Utils.getConf());
+        SDK sdkEmployee = SDKFactory.getInstance().createSDK(privateKey, Utils.getConf());
+        Log.d("sos","employeeAddress: "+sdkEmployee.getKeyPair().getNoPrefixAddress());
         return sdkEmployee.getKeyPair().getNoPrefixAddress();
     }
 }

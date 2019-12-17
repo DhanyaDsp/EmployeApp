@@ -93,11 +93,12 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
     inner class PostWelfareAsync : AsyncTask<Void, Void, Tuple2<String, String>>() {
         override fun doInBackground(vararg params: Void?): Tuple2<String, String> {
             try {
-                val conf = Utils.getConf()
                 val retrievedPrivateKeyFromDB = tokenRepo?.findAll() as List<TokenData>
                 if (retrievedPrivateKeyFromDB.isNotEmpty()) {
                     val privateKeyFromDB = retrievedPrivateKeyFromDB[0].privateKey
                     val publicKeyFromDB = retrievedPrivateKeyFromDB[0].publicKey
+                    Log.d("sos", "string public key: $publicKeyFromDB")
+                    Log.d("sos", "string private key: $privateKeyFromDB")
                     if (privateKeyFromDB != null) {
                         return Tuple2(privateKeyFromDB, publicKeyFromDB)
 //                        val privateKeyByteArray: ByteArray = android.util.Base64.decode(privateKeyFromDB, android.util.Base64.DEFAULT)
@@ -142,15 +143,15 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
 
             getKeyAuthentication(object : APICallback {
                 override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    Log.d("sos","onSuccess request code: $requestCode")
                 }
 
                 override fun onFailure(requestCode: Int, obj: Any, code: Int) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    Log.d("sos","onFailure request code: $requestCode")
                 }
 
                 override fun onProgress(requestCode: Int, isLoading: Boolean) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    Log.d("sos"," onProgress request code: $requestCode")
                 }
             }, Utils.getEmployeeAddress(privateKey))
             return Tuple2(privateKeyAsString, publicKeyAsString)

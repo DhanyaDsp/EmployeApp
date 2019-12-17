@@ -139,9 +139,7 @@ class WalletFragment : Fragment() {
                 LinearLayoutManager.VERTICAL
             )
         )
-
     }
-
 
     private fun initRecyclerView() {
         val voucherList = ArrayList<Voucher>()
@@ -274,11 +272,12 @@ class WalletFragment : Fragment() {
         val employeeAddress = sdkEmployee.keyPair.noPrefixAddress
         val tokenBalance = sdkEmployee.myTokenBalance()
         val voucherBalance = sdkEmployee.myVouchersBalance().component1()
-//        val employeeVoucherList = sdkEmployee.myVouchersList()
-
-        val employeeVoucherList = ArrayList<BigInteger>()
-        employeeVoucherList.add(BigInteger.ONE)
-        employeeVoucherList.add(BigInteger.TEN)
+        val employeeVoucherList = sdkEmployee.myVouchersList()
+        val metadata = sdkEmployee.voucherMetadata(employeeVoucherList.get(0))
+        Log.d("sos","hello")
+//        val employeeVoucherList = ArrayList<BigInteger>()
+//        employeeVoucherList.add(BigInteger.ONE)
+//        employeeVoucherList.add(BigInteger.TEN)
         return Tuple3(tokenBalance,voucherBalance,employeeVoucherList)
 
     }
