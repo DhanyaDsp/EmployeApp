@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -28,6 +29,7 @@ import com.ey.pwbc.Utils.Utils
 import com.ey.pwbc.adapters.VoucherListAdapter
 import com.ey.pwbc.database.TokenData
 import com.ey.pwbc.database.TokenRepo
+import com.ey.pwbc.databinding.WalletFragmentBinding
 import com.ey.pwbc.model.User
 import com.ey.pwbc.model.Voucher
 import com.ey.pwbc.ui.scanner.ScanActivity
@@ -59,6 +61,7 @@ class WalletFragment : Fragment() {
     private lateinit var refreshToken: TextView
     private lateinit var scanButton: FloatingActionButton
     private lateinit var zeroTokenView: ConstraintLayout
+    private lateinit var binding: WalletFragmentBinding
     private var tokenRepo: TokenRepo? = null
 
     val user = User
@@ -85,13 +88,16 @@ class WalletFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.wallet_fragment, container, false)
+        binding.lifecycleOwner = this
+        val root = binding.root
         walletFragmentViewModel =
             ViewModelProviders.of(this).get(WalletFragmentViewModel::class.java)
-        val root = inflater.inflate(R.layout.wallet_fragment, container, false)
 
         root.civScan.setOnClickListener {
             openScanner();
         }
+
         return root
     }
 
@@ -103,7 +109,6 @@ class WalletFragment : Fragment() {
         walletFragmentViewModel =
             ViewModelProviders.of(activity!!).get(WalletFragmentViewModel::class.java)
         walletFragmentViewModel.init()
-
 
         walletFragmentViewModel.getVoucher()?.observe(this, Observer {
             Log.d("sos", "Observer")
@@ -218,21 +223,23 @@ class WalletFragment : Fragment() {
         tokenBalanceView.text = " WT 0"
         tokenValue.text = " WT 0"
         refreshToken.setOnClickListener {
+            Toast.makeText(activity,"Please wait for some time to obtain balance",Toast.LENGTH_LONG).show()
             PostWelfareAsync().execute()
         }
 
     }
 
     @SuppressLint("RestrictedApi")
-    private fun refreshTokenBalance():Tuple3<BigInteger, BigInteger, List<BigInteger>>{
+    private fun refreshTokenBalance(): Tuple3<BigInteger, BigInteger, List<BigInteger>> {
         // API call
         val tokenData = Utils.getKeyFromDB(activity)
-        val privateKeyByteArray: ByteArray = android.util.Base64.decode(tokenData.component1(), android.util.Base64.DEFAULT)
+        val privateKeyByteArray: ByteArray =
+            android.util.Base64.decode(tokenData.component1(), android.util.Base64.DEFAULT)
         return displayBalance(privateKeyByteArray)
     }
 
     @SuppressLint("RestrictedApi")
-    private fun displayBalance(privateKey: ByteArray) :Tuple3<BigInteger, BigInteger, List<BigInteger>>{
+    private fun displayBalance(privateKey: ByteArray): Tuple3<BigInteger, BigInteger, List<BigInteger>> {
         val dummyPrivateKey = byteArrayOf(
             26,
             1,
@@ -274,15 +281,16 @@ class WalletFragment : Fragment() {
         val voucherBalance = sdkEmployee.myVouchersBalance().component1()
         val employeeVoucherList = sdkEmployee.myVouchersList()
         val metadata = sdkEmployee.voucherMetadata(employeeVoucherList.get(0))
-        Log.d("sos","hello")
+        Log.d("sos", "hello")
 //        val employeeVoucherList = ArrayList<BigInteger>()
 //        employeeVoucherList.add(BigInteger.ONE)
 //        employeeVoucherList.add(BigInteger.TEN)
-        return Tuple3(tokenBalance,voucherBalance,employeeVoucherList)
+        return Tuple3(tokenBalance, voucherBalance, employeeVoucherList)
 
     }
 
     inner class PostWelfareAsync : AsyncTask<Void, Void, Tuple3<BigInteger, BigInteger, List<BigInteger>>>() {
+
         override fun doInBackground(vararg params: Void?): Tuple3<BigInteger, BigInteger, List<BigInteger>> {
             try {
                 return refreshTokenBalance()
@@ -290,7 +298,7 @@ class WalletFragment : Fragment() {
 
                 Log.d("sos,", "AsyncTask exception:  ${e.localizedMessage}")
             }
-            return Tuple3(BigInteger.ZERO,BigInteger.ZERO, arrayListOf<BigInteger>())
+            return Tuple3(BigInteger.ZERO, BigInteger.ZERO, arrayListOf<BigInteger>())
         }
 
         @SuppressLint("RestrictedApi")
@@ -298,8 +306,8 @@ class WalletFragment : Fragment() {
             super.onPostExecute(result)
             // API call
             zeroTokenView.visibility = View.GONE
-            tokenBalanceView.text = " WT "+result.component1()
-            tokenValue.text = " WT "+result.component2()
+            tokenBalanceView.text = " WT " + result.component1()
+            tokenValue.text = " WT " + result.component2()
             voucherRV.visibility = View.VISIBLE
             purchaseVoucherView.visibility = View.VISIBLE
             scanButton.visibility = View.VISIBLE

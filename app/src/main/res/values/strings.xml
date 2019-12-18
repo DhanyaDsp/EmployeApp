@@ -61,6 +61,7 @@
     <string name="stiamo_attivando_il_tuo_wallet">STIAMO ATTIVANDO IL TUO WALLET</string>
     <string name="voucher_emessi">Voucher Emessi</string>
     <string name="voucher_trasferiti">Voucher Transferiti</string>
+    <string name="proceedi">Proceedi</string>
 
 
 </resources>

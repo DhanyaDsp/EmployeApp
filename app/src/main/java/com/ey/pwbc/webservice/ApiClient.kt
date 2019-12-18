@@ -35,11 +35,26 @@ class ApiClient {
                 .build()
         }
 
-        fun confirmBuyVoucher(): Retrofit {
+        fun buyVoucher(): Retrofit {
+            val gson = GsonBuilder()
+                .setLenient()
+                .create()
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(HttpClientService.getUnsafeOkHttpClient())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
+        }
+
+
+        fun confirmBuyVoucher(): Retrofit {
+            val gson = GsonBuilder()
+                .setLenient()
+                .create()
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(HttpClientService.getUnsafeOkHttpClient())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
         }
 

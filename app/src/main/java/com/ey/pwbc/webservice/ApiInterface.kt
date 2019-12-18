@@ -1,9 +1,13 @@
 package com.ey.pwbc.webservice
 
+import com.ey.pwbc.webservice.response.BuyVoucherConfirmResponse
+import com.ey.pwbc.webservice.response.BuyVoucherResponse
 import com.ey.pwbc.webservice.response.ContractAddressResponse
 import com.ey.pwbc.webservice.response.StoreKeyResponse
+import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.http.*
+import java.math.BigInteger
 
 public interface ApiInterface {
 
@@ -22,13 +26,13 @@ public interface ApiInterface {
     fun getContractAddress(): Call<ContractAddressResponse>
 
     @GET("postewelfare/REST/employee/buyVoucherInit/{param1}/{param2}")
-    fun buyVoucherInit(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<ContractAddressResponse>
+    fun buyVoucherInit(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<BuyVoucherResponse>
 
     @GET("postewelfare/REST/employee/buyVoucherConfirm/{param1}/{param2}/{param3}")
-    fun confirmBuyVoucher(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String, @Path(value = "param3") param3: String): Call<ContractAddressResponse>
+    fun confirmBuyVoucher(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String, @Path(value = "param3") param3: BigInteger): Call<BuyVoucherConfirmResponse>
 
     @GET("postewelfare/REST/employee/buyVoucherRollback/{param1}")
-    fun cancelBuyVoucher (@Path(value = "param1") param1: String): Call<ContractAddressResponse>
+    fun cancelBuyVoucher (@Path(value = "param1") param1: String): Call<JsonObject>
 
     @GET("postewelfare/REST/employee/buyVoucherInit/{param1}/{param2}")
     fun reedemVoucherInit(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<ContractAddressResponse>

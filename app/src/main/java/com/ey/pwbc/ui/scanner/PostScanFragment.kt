@@ -43,7 +43,7 @@ class PostScanFragment : Fragment() {
             //navController?.popBackStack()
         }
         scanStatus?.let {
-            if (scanStatus?.status == ScanStatus.STATUS_SUCCESS) {
+            if (scanStatus?.status == 0) {
                 root.ivStatus.setImageResource(R.drawable.ic_checked)
                 root.tvStatus.text = resources.getString(R.string.transaction_success)
                 root.tvMsg1.text = "L'acquisto del voucher e andato a buon fine."
