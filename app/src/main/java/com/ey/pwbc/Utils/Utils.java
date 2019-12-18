@@ -33,43 +33,17 @@ public class Utils {
     }
 
     public static String getEmployeeAddress(byte[] privateKey){
-//        byte[] dummyPrivateKey = new byte[]{
-//                26,
-//                1,
-//                -93,
-//                -125,
-//                -43,
-//                -76,
-//                -85,
-//                51,
-//                6,
-//                75,
-//                48,
-//                -100,
-//                9,
-//                20,
-//                -34,
-//                117,
-//                87,
-//                103,
-//                -111,
-//                -21,
-//                70,
-//                112,
-//                1,
-//                90,
-//                25,
-//                -3,
-//                15,
-//                125,
-//                110,
-//                -18,
-//                -92,
-//                0
-//        };
-//        SDK sdkEmployee = SDKFactory.getInstance().createSDK(dummyPrivateKey, Utils.getConf());
+
         SDK sdkEmployee = SDKFactory.getInstance().createSDK(privateKey, Utils.getConf());
         Log.d("sos","employeeAddress: "+sdkEmployee.getKeyPair().getNoPrefixAddress());
         return sdkEmployee.getKeyPair().getNoPrefixAddress();
+    }
+    public static String bytesToHex(byte[] hash) {
+        StringBuilder sb = new StringBuilder();
+        for (int b:
+             hash) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
     }
 }

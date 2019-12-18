@@ -102,50 +102,21 @@ class ScanDetailFragment : Fragment() {
 
         var root = binding.root.progressBar
         activity?.runOnUiThread { root.visibility = View.VISIBLE }
-        val dummyPrivateKey = byteArrayOf(
-            26,
-            1,
-            -93,
-            -125,
-            -43,
-            -76,
-            -85,
-            51,
-            6,
-            75,
-            48,
-            -100,
-            9,
-            20,
-            -34,
-            117,
-            87,
-            103,
-            -111,
-            -21,
-            70,
-            112,
-            1,
-            90,
-            25,
-            -3,
-            15,
-            125,
-            110,
-            -18,
-            -92,
-            0
-        )
-//        val sdk = SDKFactory.getInstance().createSDK(getPrivateKeyFromDB(), Utils.getConf())
-        val sdk = SDKFactory.getInstance().createSDK(dummyPrivateKey, Utils.getConf())
+        val sdk = SDKFactory.getInstance().createSDK(getPrivateKeyFromDB(), Utils.getConf())
+
+        val productName = scanData?.name
+        val productValue = scanData?.value
+        val productDate = scanData?.date
+        val merchantAddress = "d91960fe42fac3b6731373ad51ca6605fb8ec739"
 
         var productHash = sdk.computeProductHash(
-            "LAVATRICE",
-            "d91960fe42fac3b6731373ad51ca6605fb8ec739",
-            BigInteger("987"),
-            BigInteger("1576882799")
+            productName,
+            merchantAddress,
+            BigInteger(productValue!!),
+            BigInteger(productDate!!)
         )
         productHashHex = ByteUtils.toHexString(productHash)
+//        val productHashHex = Utils.bytesToHex(productHash)
         Log.d("sos", "productHashHex $productHashHex")
 
 
@@ -164,10 +135,12 @@ class ScanDetailFragment : Fragment() {
                     confirmVoucherApi(
                         object : APICallback {
                             override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
+                                moveToPostScanScreen(0)
                                 Log.d("sos", "confirmVoucherApi success :")
                             }
 
                             override fun onFailure(requestCode: Int, obj: Any, code: Int) {
+                                moveToPostScanScreen(1)
                                 Log.d("sos", "confirmVoucherApi failed :")
                             }
 
@@ -211,6 +184,7 @@ class ScanDetailFragment : Fragment() {
             }
 
             override fun onFailure(requestCode: Int, obj: Any, code: Int) {
+                moveToPostScanScreen(1)
                 Log.d("sos", "onFailure request code: $requestCode")
             }
 

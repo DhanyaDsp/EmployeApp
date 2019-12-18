@@ -46,6 +46,28 @@ class VoucherDetailActivity : AppCompatActivity() {
 
         if (intent != null) {
             val intent = intent
+
+            val voucherNameFromList = intent.getStringExtra("voucher_name")
+            val voucherValueFromList = intent.getStringExtra("voucher_value")
+            val voucherStoreNameFromList = intent.getStringExtra("voucher_store_name")
+            val voucherDateFromList = intent.getStringExtra("voucher_date")
+            val scanData = ScanData(
+                voucherNameFromList!!,
+                voucherValueFromList!!,
+                voucherStoreNameFromList!!,
+                voucherDateFromList!!
+            )
+
+
+            et_name?.setText(scanData.name)
+
+            et_value?.setText(scanData.value)
+
+            et_merchant?.setText(scanData.merchant)
+
+            et_deadline?.setText(scanData.date)
+
+
             val prod = intent.data.toString()
             Log.d("sos", "data:  ${intent.data}")
             val array = prod.split(",")
@@ -58,15 +80,13 @@ class VoucherDetailActivity : AppCompatActivity() {
                 et_value?.setText(scanData.value)
                 et_merchant?.setText(scanData.merchant)
                 et_deadline?.setText(scanData.date)
+
+
             } else {
+
                 val scanData = ScanData(array[0], array[1], array[2], array[3])
 
                 deepLinkData = scanData
-
-                Log.e("###sos","deeplinking  name : "+scanData.name)
-                Log.e("###sos","deeplinking  value : "+scanData.value)
-                Log.e("###sos","deeplinking  merchant : "+scanData.merchant)
-                Log.e("###sos","deeplinking  date : "+scanData.date)
 
                 et_name?.setText(scanData.name)
                 et_value?.setText(scanData.value)

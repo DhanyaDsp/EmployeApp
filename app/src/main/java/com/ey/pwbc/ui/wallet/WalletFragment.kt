@@ -122,7 +122,7 @@ class WalletFragment : Fragment() {
 
         })
 
-        fetchData()
+        //fetchData()
 
     }
 
@@ -168,32 +168,33 @@ class WalletFragment : Fragment() {
         progressBar.visibility = View.GONE
     }
 
-    private fun fetchData() {
-        val voucherList = ArrayList<Voucher>()
-        voucherList.add(Voucher("Unieuro", "20WT", com.ey.pwbc.R.drawable.ic_camera, "Nike Store"))
-        voucherList.add(Voucher("Adidas", "25WT", R.drawable.ic_store, "AKKAI"))
-        voucherList.add(Voucher("Levis", "100WT", R.drawable.ic_shoe, "Nike Store"))
-        voucherList.add(Voucher("Levis", "100WT", R.drawable.ic_shoe, "AKKAI"))
-        voucherList.add(Voucher("Levis", "100WT", R.drawable.ic_shoe, "Brand"))
-
-        voucherRV = view!!.findViewById(com.ey.pwbc.R.id.voucher_List_rv)
-        layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        voucherRV.layoutManager = LinearLayoutManager(
-            activity,
-            LinearLayoutManager.VERTICAL,
-            false
-        )
-        voucherRV.setHasFixedSize(true)
-        voucherRV.addItemDecoration(
-            DividerItemDecoration(
-                activity,
-                LinearLayoutManager.VERTICAL
-            )
-        )
-
-        val adapter = VoucherListAdapter(activity!!, voucherList)
-        voucherRV.adapter = adapter
-    }
+//    private fun fetchData() {
+//        val voucherList = ArrayList<Voucher>()
+//
+//        voucherList.add(Voucher("Unieuro", "20WT", com.ey.pwbc.R.drawable.ic_camera, "Nike Store"))
+//        voucherList.add(Voucher("Adidas", "25WT", R.drawable.ic_store, "AKKAI"))
+//        voucherList.add(Voucher("Levis", "100WT", R.drawable.ic_shoe, "Nike Store"))
+//        voucherList.add(Voucher("Levis", "100WT", R.drawable.ic_shoe, "AKKAI"))
+//        voucherList.add(Voucher("Levis", "100WT", R.drawable.ic_shoe, "Brand"))
+//
+//        voucherRV = view!!.findViewById(com.ey.pwbc.R.id.voucher_List_rv)
+//        layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+//        voucherRV.layoutManager = LinearLayoutManager(
+//            activity,
+//            LinearLayoutManager.VERTICAL,
+//            false
+//        )
+//        voucherRV.setHasFixedSize(true)
+//        voucherRV.addItemDecoration(
+//            DividerItemDecoration(
+//                activity,
+//                LinearLayoutManager.VERTICAL
+//            )
+//        )
+//
+//        val adapter = VoucherListAdapter(activity!!, voucherList)
+//        voucherRV.adapter = adapter
+//    }
 
     private fun openScanner() {
         val intent = Intent(activity, ScanActivity::class.java)
@@ -223,14 +224,18 @@ class WalletFragment : Fragment() {
         tokenBalanceView.text = " WT 0"
         tokenValue.text = " WT 0"
         refreshToken.setOnClickListener {
-            Toast.makeText(activity,"Please wait for some time to obtain balance",Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                activity,
+                "Please wait for some time to obtain balance",
+                Toast.LENGTH_LONG
+            ).show()
             PostWelfareAsync().execute()
         }
 
     }
 
     @SuppressLint("RestrictedApi")
-    private fun refreshTokenBalance(): Tuple3<BigInteger, BigInteger, List<BigInteger>> {
+    private fun refreshTokenBalance(): Tuple3<BigInteger, BigInteger, List<Voucher>> {
         // API call
         val tokenData = Utils.getKeyFromDB(activity)
         val privateKeyByteArray: ByteArray =
@@ -239,70 +244,53 @@ class WalletFragment : Fragment() {
     }
 
     @SuppressLint("RestrictedApi")
-    private fun displayBalance(privateKey: ByteArray): Tuple3<BigInteger, BigInteger, List<BigInteger>> {
-        val dummyPrivateKey = byteArrayOf(
-            26,
-            1,
-            -93,
-            -125,
-            -43,
-            -76,
-            -85,
-            51,
-            6,
-            75,
-            48,
-            -100,
-            9,
-            20,
-            -34,
-            117,
-            87,
-            103,
-            -111,
-            -21,
-            70,
-            112,
-            1,
-            90,
-            25,
-            -3,
-            15,
-            125,
-            110,
-            -18,
-            -92,
-            0
-        )
-        val sdkEmployee = SDKFactory.getInstance().createSDK(dummyPrivateKey, Utils.getConf())
-//        val sdkEmployee = SDKFactory.getInstance().createSDK(privateKey, Utils.getConf())
+    private fun displayBalance(privateKey: ByteArray): Tuple3<BigInteger, BigInteger, List<Voucher>> {
+        val sdkEmployee = SDKFactory.getInstance().createSDK(privateKey, Utils.getConf())
         val employeeAddress = sdkEmployee.keyPair.noPrefixAddress
         val tokenBalance = sdkEmployee.myTokenBalance()
         val voucherBalance = sdkEmployee.myVouchersBalance().component1()
         val employeeVoucherList = sdkEmployee.myVouchersList()
-        val metadata = sdkEmployee.voucherMetadata(employeeVoucherList.get(0))
-        Log.d("sos", "hello")
-//        val employeeVoucherList = ArrayList<BigInteger>()
-//        employeeVoucherList.add(BigInteger.ONE)
-//        employeeVoucherList.add(BigInteger.TEN)
-        return Tuple3(tokenBalance, voucherBalance, employeeVoucherList)
+        val voucherList = arrayListOf<Voucher>()
+
+        /*for (employeeVoucher in employeeVoucherList) {
+            val voucherDetails = sdkEmployee.voucherMetadata(employeeVoucher)
+            voucherList.add(
+                Voucher(
+                    voucherDetails.component2(),
+                    voucherDetails.component3().toString(),
+                    R.drawable.ic_store,
+                    ""
+                )
+            )
+        }*/
+
+        voucherList.add(Voucher(
+            "abc",
+            "250",
+            R.drawable.ic_store,
+            "Adidas"
+        ))
+
+
+        return Tuple3(tokenBalance, voucherBalance, voucherList)
 
     }
 
-    inner class PostWelfareAsync : AsyncTask<Void, Void, Tuple3<BigInteger, BigInteger, List<BigInteger>>>() {
+    inner class PostWelfareAsync :
+        AsyncTask<Void, Void, Tuple3<BigInteger, BigInteger, List<Voucher>>>() {
 
-        override fun doInBackground(vararg params: Void?): Tuple3<BigInteger, BigInteger, List<BigInteger>> {
+        override fun doInBackground(vararg params: Void?): Tuple3<BigInteger, BigInteger, List<Voucher>> {
             try {
                 return refreshTokenBalance()
             } catch (e: Exception) {
 
                 Log.d("sos,", "AsyncTask exception:  ${e.localizedMessage}")
             }
-            return Tuple3(BigInteger.ZERO, BigInteger.ZERO, arrayListOf<BigInteger>())
+            return Tuple3(BigInteger.ZERO, BigInteger.ZERO, arrayListOf<Voucher>())
         }
 
         @SuppressLint("RestrictedApi")
-        override fun onPostExecute(result: Tuple3<BigInteger, BigInteger, List<BigInteger>>) {
+        override fun onPostExecute(result: Tuple3<BigInteger, BigInteger, List<Voucher>>) {
             super.onPostExecute(result)
             // API call
             zeroTokenView.visibility = View.GONE
@@ -312,6 +300,24 @@ class WalletFragment : Fragment() {
             purchaseVoucherView.visibility = View.VISIBLE
             scanButton.visibility = View.VISIBLE
             voucherListTitle.visibility = View.VISIBLE
+
+            voucherRV = view!!.findViewById(com.ey.pwbc.R.id.voucher_List_rv)
+            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            voucherRV.layoutManager = LinearLayoutManager(
+                activity,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+            voucherRV.setHasFixedSize(true)
+            voucherRV.addItemDecoration(
+                DividerItemDecoration(
+                    activity,
+                    LinearLayoutManager.VERTICAL
+                )
+            )
+
+            val adapter = VoucherListAdapter(activity!!, result.component3() as ArrayList<Voucher>)
+            voucherRV.adapter = adapter
         }
     }
 

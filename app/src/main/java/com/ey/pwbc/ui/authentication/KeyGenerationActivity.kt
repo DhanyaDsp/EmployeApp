@@ -143,15 +143,15 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
 
             getKeyAuthentication(object : APICallback {
                 override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
-                    Log.d("sos","onSuccess request code: $requestCode")
+                    Log.d("sos", "onSuccess request code: $requestCode")
                 }
 
                 override fun onFailure(requestCode: Int, obj: Any, code: Int) {
-                    Log.d("sos","onFailure request code: $requestCode")
+                    Log.d("sos", "onFailure request code: $requestCode")
                 }
 
                 override fun onProgress(requestCode: Int, isLoading: Boolean) {
-                    Log.d("sos"," onProgress request code: $requestCode")
+                    Log.d("sos", " onProgress request code: $requestCode")
                 }
             }, Utils.getEmployeeAddress(privateKey))
             return Tuple2(privateKeyAsString, publicKeyAsString)
@@ -179,31 +179,36 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    private fun generateFiscalCode(userName: String): String {
+    private fun generateFiscalCode(userName: String): Tuple2<String, String> {
         var fiscalCode = ""
+        var name = ""
         if (userName != null) {
             if (userName == "employee1") {
                 fiscalCode = "RSSFLP58B10H501V"
-                return fiscalCode
+                name = "Filippo Rossi"
+                return Tuple2(fiscalCode, name)
             } else if (userName == "employee2") {
                 fiscalCode = "VRDVLR88B10H544X"
-                return fiscalCode
+                name = "VRDVLR88B10H544X"
+                return Tuple2(fiscalCode, name)
             } else if (userName == "employee3") {
                 fiscalCode = "BRBBNC72B10G100H"
-                return fiscalCode
+                name = "BRBBNC72B10G100H"
+                return Tuple2(fiscalCode, name)
             } else {
-                return "BRBBNC72B10G100H"
+                return Tuple2(fiscalCode, name)
             }
         }
-        return fiscalCode
+        return Tuple2(fiscalCode, name)
     }
 
     private fun getKeyAuthentication(callBack: APICallback, employeeAddress: String) {
         val apiService: ApiInterface =
             ApiClient.getKeyAuthenticationDetails().create(ApiInterface::class.java)
+        val getFiscalFromUser = generateFiscalCode(userName!!)
         val call: Call<StoreKeyResponse> =
             apiService.getKeyDetails(
-                generateFiscalCode(userName!!),
+                getFiscalFromUser.component1(),
                 employeeAddress
             )
         Log.d("sos", "call request: " + call.request().url())

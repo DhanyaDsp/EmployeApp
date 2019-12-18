@@ -61,6 +61,10 @@ class VoucherListAdapter(
 
             itemView.setOnClickListener(View.OnClickListener {
                 val intent = Intent(itemView.context, VoucherDetailActivity::class.java)
+                intent.putExtra("voucher_name",voucher.voucherName)
+                intent.putExtra("voucher_value",voucher.voucherAmount)
+                intent.putExtra("voucher_store_name",voucher.storeName)
+                intent.putExtra("voucher_date",voucher.voucherName)
                 itemView.context.startActivity(intent)
             })
         }
