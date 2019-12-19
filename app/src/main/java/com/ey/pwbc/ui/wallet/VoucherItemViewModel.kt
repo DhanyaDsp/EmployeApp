@@ -20,18 +20,5 @@ class VoucherItemViewModel(private val voucher: Voucher) : BaseObservable() {
 
     }
 
-    @Bindable
-    fun getVoucherName(): String {
-        return if (!TextUtils.isEmpty(voucherModel?.voucherName)) voucherModel!!.voucherName else ""
-    }
 
-    @Bindable
-    fun getVoucherAmount(): String {
-        return if (!TextUtils.isEmpty(voucherModel?.voucherAmount)) voucherModel!!.voucherAmount else ""
-    }
-
-    @Bindable
-    fun getStoreName(): String {
-        return if (!TextUtils.isEmpty(voucherModel?.storeName)) voucherModel!!.storeName else ""
-    }
 }

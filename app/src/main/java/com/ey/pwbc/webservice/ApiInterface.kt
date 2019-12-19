@@ -29,17 +29,17 @@ public interface ApiInterface {
     fun buyVoucherInit(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<BuyVoucherResponse>
 
     @GET("postewelfare/REST/employee/buyVoucherConfirm/{param1}/{param2}/{param3}")
-    fun confirmBuyVoucher(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String, @Path(value = "param3") param3: BigInteger): Call<BuyVoucherConfirmResponse>
+    fun confirmBuyVoucher(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String, @Path(value = "param3") param3: String): Call<BuyVoucherConfirmResponse>
 
-    @GET("postewelfare/REST/employee/buyVoucherRollback/{param1}")
-    fun cancelBuyVoucher (@Path(value = "param1") param1: String): Call<JsonObject>
+    @GET("postewelfare/REST/employee/buyVoucherRollback/{param1}/{param2}")
+    fun cancelBuyVoucher (@Path(value = "param1") param1: String,@Path(value = "param2")param2: String): Call<JsonObject>
 
-    @GET("postewelfare/REST/employee/buyVoucherInit/{param1}/{param2}")
+    @GET("postewelfare/REST/employee/reedemVoucherInit/{param1}/{param2}")
     fun reedemVoucherInit(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<ContractAddressResponse>
 
-    @GET("postewelfare/REST/employee/buyVoucherInit/{param1}/{param2}")
+    @GET("postewelfare/REST/employee/reedemVoucherConfirm/{param1}/{param2}")
     fun reedemVoucherConfirm(@Path(value = "param1") param1: String, @Path(value = "param2") param2: String): Call<ContractAddressResponse>
 
-    @GET("postewelfare/REST/employee/buyVoucherRollback/{param1}")
-    fun reedemVoucherRollback (@Path(value = "param1") param1: String): Call<ContractAddressResponse>
+    @GET("postewelfare/REST/employee/buyVoucherRollback/{param1}/{param2}")
+    fun reedemVoucherRollback (@Path(value = "param1") param1: String,@Path(value = "param2") param2: String): Call<ContractAddressResponse>
 }

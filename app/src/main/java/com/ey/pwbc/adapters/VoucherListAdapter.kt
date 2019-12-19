@@ -33,7 +33,7 @@ class VoucherListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItems(voucherList[position])
+        holder.bindItems(voucherList[position],position)
     }
 
     override fun getItemCount(): Int {
@@ -43,16 +43,14 @@ class VoucherListAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bindItems(voucher: Voucher) {
+        fun bindItems(voucher: Voucher,position: Int) {
             val voucherNameTV = itemView.findViewById(R.id.txt_voucher_name) as TextView
             val voucherAmountTV = itemView.findViewById(R.id.txt_voucher_amount) as TextView
-//            val voucherImageIV = itemView.findViewById(R.id.img_voucher_image) as CircleImageView
             val voucherImageIV = itemView.findViewById(R.id.img_voucher_image) as ImageView
             val storeName = itemView.findViewById(R.id.txt_store_name) as TextView
-            voucherNameTV.text = voucher.voucherName
-            voucherAmountTV.text = voucher.voucherAmount
-            voucherImageIV.setImageResource(voucher.voucherImage)
-            storeName.text = voucher.storeName
+            voucherNameTV.text = voucher.name
+            voucherAmountTV.text = voucher.value
+            storeName.text = voucher.merchant
 
             Glide.with(itemView.context)
                 .load(R.drawable.ic_store)
@@ -60,11 +58,16 @@ class VoucherListAdapter(
                 .into(voucherImageIV)
 
             itemView.setOnClickListener(View.OnClickListener {
+
+
                 val intent = Intent(itemView.context, VoucherDetailActivity::class.java)
-                intent.putExtra("voucher_name",voucher.voucherName)
-                intent.putExtra("voucher_value",voucher.voucherAmount)
-                intent.putExtra("voucher_store_name",voucher.storeName)
-                intent.putExtra("voucher_date",voucher.voucherName)
+                intent.putExtra("voucher_name",voucher.name)
+                intent.putExtra("voucher_value",voucher.value)
+                intent.putExtra("merchant",voucher.merchant)
+                intent.putExtra("voucher_date",voucher.date)
+                intent.putExtra("voucher_id", voucher.voucherId)
+                intent.putExtra("merchant_address", voucher.merchantAddress)
+                intent.putExtra("position",position)
                 itemView.context.startActivity(intent)
             })
         }

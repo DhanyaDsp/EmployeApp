@@ -9,6 +9,7 @@
         <variable
             name="scanData"
             type="com.ey.pwbc.model.ScanData" />
+
     </data>
 
     <RelativeLayout

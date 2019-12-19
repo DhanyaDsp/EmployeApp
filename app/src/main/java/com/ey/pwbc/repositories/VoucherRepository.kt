@@ -19,18 +19,11 @@ object VoucherRepository {
         }
 
     public fun getVoucher(): MutableLiveData<MutableList<Voucher>> {
-        setVoucher()
+
         val data = MutableLiveData<MutableList<Voucher>>()
         data.value = voucherList
         return data
     }
 
-    private fun setVoucher() {
-        voucherList?.add(Voucher("Adidas", "100 WT", 1,""))
-        voucherList?.add(Voucher("Levis", "10 QT", 1,""))
-        voucherList?.add(Voucher("Reymond", "50 QT", 3,""))
-        voucherList?.add(Voucher("Puma", "70 QT", 2,""))
 
-
-    }
 }

@@ -1,8 +1,9 @@
 package com.ey.pwbc.model
 
 import androidx.lifecycle.MutableLiveData
+import java.math.BigInteger
 
-class Voucher(val voucherName: String, val voucherAmount: String, val voucherImage: Int,val storeName:String) {
+class Voucher(var name: String,  var merchant: String, var value: String,var date: String, var voucherId: BigInteger, var merchantAddress: String) {
 
 
 }

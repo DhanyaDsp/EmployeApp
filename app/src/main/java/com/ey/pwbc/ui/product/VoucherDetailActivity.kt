@@ -1,74 +1,110 @@
 package com.ey.pwbc.ui.product
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.RelativeLayout
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import com.conio.postequorum.implementation.SDKFactory
 import com.ey.pwbc.R
+import com.ey.pwbc.Utils.Utils
 import com.ey.pwbc.UtilsDialog
+import com.ey.pwbc.database.TokenDBManager
+import com.ey.pwbc.database.TokenData
+import com.ey.pwbc.database.TokenRepo
 import com.ey.pwbc.databinding.ActivityVoucherDetailBinding
 import com.ey.pwbc.model.ScanData
 import com.ey.pwbc.model.User
 import com.ey.pwbc.ui.dashboard.LandingActivity
+import com.ey.pwbc.webservice.APICallback
+import com.ey.pwbc.webservice.ApiClient
+import com.ey.pwbc.webservice.ApiInterface
+import com.ey.pwbc.webservice.response.BuyVoucherConfirmResponse
+import com.ey.pwbc.webservice.response.ContractAddressResponse
+import kotlinx.android.synthetic.main.activity_voucher_detail.*
 import kotlinx.android.synthetic.main.app_bar_landing.*
 import kotlinx.android.synthetic.main.post_scan_fragment.view.*
+import org.bouncycastle.crypto.agreement.srp.SRP6Client
+import org.web3j.tuples.generated.Tuple2
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.math.BigInteger
 
 
 class VoucherDetailActivity : AppCompatActivity() {
     private lateinit var viewModel: VoucherDetailViewModel
     private lateinit var binding: ActivityVoucherDetailBinding
     private var deepLinkData: ScanData? = null
+    private var privateKey: ByteArray? = null
+    private var position: Int? = null
+    private var voucherId: String? = null;
+    private var merchant: String? = null
+    private var merchantPublicKey: String? = null
+    private var voucherValueFromList: String? = null
+    private var merchant_address: String? = null
     var toolbar: Toolbar? = null;
     val user = User
-    private var et_name: EditText? = null
-    private var et_value: EditText? = null
-    private var et_merchant: EditText? = null
-    private var et_deadline: EditText? = null
+    private var tokenRepo: TokenRepo? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        et_name = findViewById(R.id.et_name)
-        et_value = findViewById(R.id.et_value)
-        et_merchant = findViewById(R.id.et_merchant)
-        et_deadline = findViewById(R.id.et_deadline)
+        TokenDBManager.init(this)
+        tokenRepo = TokenRepo()
+        privateKey = getPrivateKeyFromDB()
 
+        Log.d("sos", "db $privateKey")
         if (intent != null) {
             val intent = intent
 
             val voucherNameFromList = intent.getStringExtra("voucher_name")
-            val voucherValueFromList = intent.getStringExtra("voucher_value")
-            val voucherStoreNameFromList = intent.getStringExtra("voucher_store_name")
+            voucherValueFromList = intent.getStringExtra("voucher_value")
+            merchant = intent.getStringExtra("merchant")
             val voucherDateFromList = intent.getStringExtra("voucher_date")
+            val voucherIdLocal = intent.getSerializableExtra("voucher_id")!!.toString()
+            voucherId = intent.getSerializableExtra("voucher_id")!!.toString()
+            merchant_address = intent.getSerializableExtra("merchant_address")!!.toString()
+            position = intent.getIntExtra("position", 0)
+            merchantPublicKey = voucherValueFromList?.substring(2, voucherValueFromList!!.length)
+            Log.d("sos", "merchantPublicKey: $merchantPublicKey")
             val scanData = ScanData(
                 voucherNameFromList!!,
                 voucherValueFromList!!,
-                voucherStoreNameFromList!!,
+                merchant_address!!,
                 voucherDateFromList!!
             )
 
+            if (intent.getStringExtra("voucher_name") != null) {
+                deepLinkData = scanData
+                et_name?.setText(scanData.name)
+                et_value?.setText(scanData.value)
+                et_merchant?.setText(scanData.merchant)
+                et_deadline?.setText(scanData.date)
+            }
 
-            et_name?.setText(scanData.name)
+
+            /*et_name?.setText(scanData.name)
 
             et_value?.setText(scanData.value)
 
             et_merchant?.setText(scanData.merchant)
 
             et_deadline?.setText(scanData.date)
+*/
 
-
-            val prod = intent.data.toString()
+            /*val prod = intent.data.toString()
             Log.d("sos", "data:  ${intent.data}")
             val array = prod.split(",")
             if (intent.data == null) {
@@ -92,11 +128,9 @@ class VoucherDetailActivity : AppCompatActivity() {
                 et_value?.setText(scanData.value)
                 et_merchant?.setText(scanData.merchant)
                 et_deadline?.setText(scanData.date)
-            }
+            }*/
 
-            if (array.size == 4) {
 
-            }
         }
         initBinding()
         initToolbar()
@@ -134,7 +168,23 @@ class VoucherDetailActivity : AppCompatActivity() {
             "ll  tuo Voucher verra trasferito ad Adidas Store",
             "Confermi?",
             this,
-            View.OnClickListener { moveToPostRedeemVoucher() },
+            View.OnClickListener {
+                reedemVoucherApi(object : APICallback {
+                    override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
+                        Log.d("sos", "s1")
+                        RedeemVoucherAsync().execute()
+                    }
+
+                    override fun onFailure(requestCode: Int, obj: Any, code: Int) {
+                        Log.d("sos", "f1")
+                    }
+
+                    override fun onProgress(requestCode: Int, isLoading: Boolean) {
+                        Log.d("sos", "p1")
+                    }
+
+                }, BigInteger(voucherId!!).toString(16), merchantPublicKey!!)
+            },
             View.OnClickListener { },
             View.OnClickListener { },
             UtilsDialog.TYPE_CONFIRM
@@ -174,9 +224,169 @@ class VoucherDetailActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
 
+    private fun getPrivateKeyFromDB(): ByteArray {
+        val retrievedPrivateKeyFromDB = tokenRepo?.findAll() as List<TokenData>
+        val privateKeyFromDB = retrievedPrivateKeyFromDB[0].privateKey
+        return Base64.decode(privateKeyFromDB, Base64.DEFAULT)
+
+    }
+
+    private fun getEmployeeAddressFromDB(): String {
+        return Utils.getEmployeeAddress(privateKey)
+    }
+
+    private fun reedemVoucherApi(
+        callBack: APICallback,
+        voucherId: String,
+        merchantKey: String
+    ) {
+        //Api call
+        val apiService: ApiInterface =
+            ApiClient.confirmBuyVoucher().create(ApiInterface::class.java)
+        val call: Call<ContractAddressResponse> =
+            apiService.reedemVoucherInit(
+                voucherId,
+                merchantKey
+            )
+        Log.d("sos", "reedem request: " + call.request().url())
+        call.enqueue(object : Callback<ContractAddressResponse> {
+
+            override fun onFailure(call: Call<ContractAddressResponse>, t: Throwable) {
+
+            }
+
+            override fun onResponse(
+                call: Call<ContractAddressResponse>,
+                response: Response<ContractAddressResponse>
+            ) {
+                var contractAddressResponse: ContractAddressResponse = response.body()!!
+                callBack.onSuccess(111, contractAddressResponse, response.code())
+
+            }
+        })
+    }
+
+    private fun confirmRedeemVoucherApi(
+        callBack: APICallback,
+        voucherId: String,
+        merchantKey: String
+    ) {
+        //Api call
+        val apiService: ApiInterface =
+            ApiClient.reedemVoucherConfirm().create(ApiInterface::class.java)
+        val call: Call<ContractAddressResponse> =
+            apiService.reedemVoucherConfirm(
+                voucherId,
+                merchantKey
+            )
+        Log.d("sos", "reedem confirm request: " + call.request().url())
+        call.enqueue(object : Callback<ContractAddressResponse> {
+
+            override fun onFailure(call: Call<ContractAddressResponse>, t: Throwable) {
+
+            }
+
+            override fun onResponse(
+                call: Call<ContractAddressResponse>,
+                response: Response<ContractAddressResponse>
+            ) {
+                var contractAddressResponse: ContractAddressResponse = response.body()!!
+                callBack.onSuccess(111, contractAddressResponse, response.code())
+
+            }
+        })
+    }
+
+    private fun rollBackRedeemVoucherApi(
+        callBack: APICallback,
+        voucherId: String,
+        employeeAddress: String
+    ) {
+        //Api call
+        val apiService: ApiInterface =
+            ApiClient.reedemVoucherRollback().create(ApiInterface::class.java)
+        val call: Call<ContractAddressResponse> =
+            apiService.reedemVoucherRollback(
+                voucherId,
+                employeeAddress
+            )
+        Log.d("sos", "reedem rollback request: " + call.request().url())
+        call.enqueue(object : Callback<ContractAddressResponse> {
+
+            override fun onFailure(call: Call<ContractAddressResponse>, t: Throwable) {
+
+            }
+
+            override fun onResponse(
+                call: Call<ContractAddressResponse>,
+                response: Response<ContractAddressResponse>
+            ) {
+                var contractAddressResponse: ContractAddressResponse = response.body()!!
+                callBack.onSuccess(111, contractAddressResponse, response.code())
+
+            }
+        })
+    }
+
+    private fun useVoucher() {
+        val sdk = SDKFactory.getInstance().createSDK(getPrivateKeyFromDB(), Utils.getConf())
+
+            val res = sdk.dipendente().redeemVoucher(BigInteger(voucherId!!))
+        confirmRedeemVoucherApi(object : APICallback {
+            override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
+                Log.d("sos", "s1")
+                moveToPostRedeemVoucher()
+            }
+
+            override fun onFailure(requestCode: Int, obj: Any, code: Int) {
+                Log.d("sos", "f1")
+            }
+
+            override fun onProgress(requestCode: Int, isLoading: Boolean) {
+                Log.d("sos", "p1")
+            }
+
+        }, BigInteger(voucherId!!).toString(16), merchantPublicKey!!)
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    inner class RedeemVoucherAsync : AsyncTask<Void, Void, Tuple2<String, String>>() {
+        override fun doInBackground(vararg params: Void?): Tuple2<String, String> {
+            try {
+                useVoucher()
+            } catch (e: Exception) {
+                rollBackRedeemVoucherApi(object : APICallback {
+                    override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
+                        Log.d("sos", "s1")
+                        // RedeemVoucherAsync().execute()
+                    }
+
+                    override fun onFailure(requestCode: Int, obj: Any, code: Int) {
+                        Log.d("sos", "f1")
+                    }
+
+                    override fun onProgress(requestCode: Int, isLoading: Boolean) {
+                        Log.d("sos", "p1")
+                    }
+
+                }, BigInteger(voucherId!!).toString(16), getEmployeeAddressFromDB())
+                Toast.makeText(
+                    applicationContext,
+                    "Something went wrong!  ${e.message}", Toast.LENGTH_LONG
+                ).show()
+                Log.d("sos,", "AsyncTask exception:  ${e.localizedMessage}")
+            }
+            return Tuple2("", "")
+        }
+
+        override fun onPostExecute(result: Tuple2<String, String>) {
+            super.onPostExecute(result)
+        }
+    }
 }

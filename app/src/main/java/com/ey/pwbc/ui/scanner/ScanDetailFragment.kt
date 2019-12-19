@@ -1,5 +1,6 @@
 package com.ey.pwbc.ui.scanner
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.opengl.Visibility
 import android.os.AsyncTask
@@ -47,7 +48,8 @@ class ScanDetailFragment : Fragment() {
     private var productHashHex: String? = null
     private var voucherId: BigInteger? = null
     private var privateKey: ByteArray? = null
-    private var employeeAddress: String? = "8f1ca25eea88462861d9253de1de5995d5254302"
+    var productHash: ByteArray? = null
+    var merchantAddress: String? = null
 
     companion object {
         fun newInstance() = ScanDetailFragment()
@@ -71,6 +73,7 @@ class ScanDetailFragment : Fragment() {
         binding.scanData = scanData;
         val root = binding.root
         root.btnProceed.setOnClickListener {
+            showProgress()
             PostWelfareAsync().execute()
         }
         TokenDBManager.init(activity)
@@ -82,6 +85,7 @@ class ScanDetailFragment : Fragment() {
     }
 
     private fun moveToPostScanScreen(status: Int) {
+        hideProgress()
         val navController = activity?.findNavController(R.id.nav_host_fragment)
         var bundle = bundleOf("scanStatus" to ScanStatus(status, "", ""))
         navController?.navigate(R.id.nav_post_scan, bundle)
@@ -101,16 +105,14 @@ class ScanDetailFragment : Fragment() {
 
     private fun scanProduct() {
 
-        var root = binding.root.progressBar
-        activity?.runOnUiThread { root.visibility = View.VISIBLE }
         val sdk = SDKFactory.getInstance().createSDK(getPrivateKeyFromDB(), Utils.getConf())
 
         val productName = scanData?.name
         val productValue = scanData?.value
         val productDate = scanData?.date
-        val merchantAddress = scanData?.merchant
+        merchantAddress = scanData?.merchant
 
-        val productHash = sdk.computeProductHash(
+        productHash = sdk.computeProductHash(
             productName,
             merchantAddress,
             BigInteger(productValue!!),
@@ -118,83 +120,27 @@ class ScanDetailFragment : Fragment() {
         )
 
         productHashHex = ByteUtils.toHexString(productHash)
-        //  val productHashHex = Utils.bytesToHex(productHash)
+
         Log.d("sos", "productHashHex $productHashHex")
-        //val productHashHexNew = String(Hex.encode(productHash))
 
         // api call after calculating product hash:
-        // val privateKeyAsByteArray = getPrivateKeyFromDB()
+
         buyVoucherInitAPI(object : APICallback {
-
             override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
-                try {
-                    val buyVoucherOperation = sdk.dipendente().buyVoucher(productHash)
-                    Log.d("sos", "buyVoucherOperation :$buyVoucherOperation")
-                    activity?.runOnUiThread { root.visibility = View.INVISIBLE }
+                Log.d("sos", "success1")
+                BuyVoucherAsyn().execute()
 
-
-//                confirm api
-                    confirmVoucherApi(
-                        object : APICallback {
-                            override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
-                                moveToPostScanScreen(0)
-                                Log.d("sos", "confirmVoucherApi success :")
-                            }
-
-                            override fun onFailure(requestCode: Int, obj: Any, code: Int) {
-                                moveToPostScanScreen(1)
-                                Log.d("sos", "confirmVoucherApi failed :")
-                            }
-
-                            override fun onProgress(requestCode: Int, isLoading: Boolean) {
-                                Log.d("sos", "confirmVoucherApi onProgress :")
-                            }
-
-                        },
-                        productHashHex,
-                        "8f1ca25eea88462861d9253de1de5995d5254302",
-                        buyVoucherOperation!!
-                    )
-
-                } catch (e: Exception) {
-                    activity?.runOnUiThread { root.visibility = View.INVISIBLE }
-                    Log.d("sos", "buy voucher operation exception: " + e.localizedMessage)
-                    moveToPostScanScreen(1)
-                    //call this api when blockchain operation fails-rollback api
-                    val apiService: ApiInterface =
-                        ApiClient.cancelBuyVoucher().create(ApiInterface::class.java)
-                    val call: Call<JsonObject> =
-                        apiService.cancelBuyVoucher(productHashHex!!)
-                    Log.d("sos", "URL: " + call.request().url())
-
-                    call.enqueue(object : Callback<JsonObject> {
-                        override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                            Log.d("sos", "rollback buy voucher failure :" + t.message)
-                        }
-
-                        override fun onResponse(
-                            call: Call<JsonObject>,
-                            response: Response<JsonObject>
-                        ) {
-                            Log.d("sos", "rollback buy voucher response :" + response.isSuccessful)
-                        }
-
-                    })
-                    // Toast.makeText(activity, "Exception:  " + e.localizedMessage, Toast.LENGTH_SHORT).show()
-
-                }
             }
 
             override fun onFailure(requestCode: Int, obj: Any, code: Int) {
-                moveToPostScanScreen(1)
-                Log.d("sos", "onFailure request code: $requestCode")
+                Log.d("sos", "failure1")
+                hideProgress()
             }
 
             override fun onProgress(requestCode: Int, isLoading: Boolean) {
-                Log.d("sos", " onProgress request code: $requestCode")
+                Log.d("sos", "onprogress1")
             }
-
-        }, productHashHex, employeeAddress!!)
+        }, productHashHex, getEmployeeAddressFromDB())
 
 
     }
@@ -215,12 +161,12 @@ class ScanDetailFragment : Fragment() {
         call.enqueue(object : Callback<BuyVoucherResponse> {
 
             override fun onFailure(call: Call<BuyVoucherResponse>, t: Throwable) {
-                Toast.makeText(
-                    activity,
-                    "Something went wrong!  ${t.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-                Log.d("sos", "onFailure " + t.localizedMessage)
+//                Toast.makeText(
+//                    activity,
+//                    "Something went wrong!  ${t.message}",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//                Log.d("sos", "onFailure " + t.localizedMessage)
             }
 
             override fun onResponse(
@@ -229,49 +175,52 @@ class ScanDetailFragment : Fragment() {
             ) {
 
                 var buyVoucherResponse: BuyVoucherResponse = response.body()!!
-                Log.d("sos", "response " + buyVoucherResponse.isSuccess())
-
-                Toast.makeText(
-                    activity,
-                    "Buy voucher:  ${buyVoucherResponse.isSuccess()}",
-                    Toast.LENGTH_LONG
-                ).show()
-
-
+//                Log.d("sos", "response " + buyVoucherResponse.isSuccess())
+//
+//                Toast.makeText(
+//                    activity,
+//                    "Buy voucher:  ${buyVoucherResponse.isSuccess()}",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//
+//
                 if (buyVoucherResponse != null) {
                     if (buyVoucherResponse.isSuccess()!!) {
-
-
+//
+//
                         callBack.onSuccess(102, buyVoucherResponse, response.code())
-
-                        //TODO:call confirm api.
-
+//
+//                        //TODO:call confirm api.
+//
+//                    } else {
+//                        buyVoucherResponse.setMessage("Failed to buy voucher!")
+//                        callBack.onFailure(
+//                            102, buyVoucherResponse.getMessage(), response.code()
+//                        )
+//                    }
                     } else {
-                        buyVoucherResponse.setMessage("Failed to buy voucher!")
-                        callBack.onFailure(
-                            102, buyVoucherResponse.getMessage(), response.code()
-                        )
+//                    buyVoucherResponse = BuyVoucherResponse();
+//                    buyVoucherResponse.setMessage("Failed buy voucher!")
+//                    callBack.onFailure(
+//                        102,
+//                        buyVoucherResponse.getMessage(),
+//                        response.code()
+//                    )
                     }
-                } else {
-                    buyVoucherResponse = BuyVoucherResponse();
-                    buyVoucherResponse.setMessage("Failed buy voucher!")
-                    callBack.onFailure(
-                        102,
-                        buyVoucherResponse.getMessage(),
-                        response.code()
-                    )
                 }
             }
-        })
 
 
+        });
     }
 
+    @SuppressLint("StaticFieldLeak")
     inner class PostWelfareAsync : AsyncTask<Void, Void, Tuple2<String, String>>() {
         override fun doInBackground(vararg params: Void?): Tuple2<String, String> {
             try {
                 scanProduct()
             } catch (e: Exception) {
+                hideProgress()
                 throw e
                 Log.d("sos,", "AsyncTask exception:  ${e.localizedMessage}")
             }
@@ -280,7 +229,6 @@ class ScanDetailFragment : Fragment() {
 
         override fun onPostExecute(result: Tuple2<String, String>) {
             super.onPostExecute(result)
-
         }
     }
 
@@ -297,7 +245,7 @@ class ScanDetailFragment : Fragment() {
         callBack: APICallback,
         productHashHex: String?,
         employeeAddress: String,
-        voucherId: BigInteger
+        voucherId: String
     ) {
         //Api call
         val apiService: ApiInterface =
@@ -307,10 +255,11 @@ class ScanDetailFragment : Fragment() {
                 productHashHex!!,
                 employeeAddress, voucherId
             )
-        Log.d("sos", "call request: " + call.request().url())
+        Log.d("sos", "call confirm request: " + call.request().url())
         call.enqueue(object : Callback<BuyVoucherConfirmResponse> {
 
             override fun onFailure(call: Call<BuyVoucherConfirmResponse>, t: Throwable) {
+                Log.d("TAG", "Failure2")
                 Toast.makeText(
                     activity,
                     "Something went wrong!  ${t.message}", Toast.LENGTH_LONG
@@ -322,39 +271,114 @@ class ScanDetailFragment : Fragment() {
                 call: Call<BuyVoucherConfirmResponse>,
                 response: Response<BuyVoucherConfirmResponse>
             ) {
-
+                Log.d("TAG", "Success2")
                 var buyVoucherResponse: BuyVoucherConfirmResponse = response.body()!!
                 Log.d("sos", "response " + buyVoucherResponse.isSuccess())
+                Log.d("sos", "response  full" + buyVoucherResponse)
 
-
+                callBack.onSuccess(101, buyVoucherResponse, response.code())
                 Toast.makeText(
                     activity,
                     "Buy voucher:  ${buyVoucherResponse.isSuccess()}",
                     Toast.LENGTH_LONG
                 ).show()
-
-                if (buyVoucherResponse != null) {
-                    if (buyVoucherResponse.isSuccess()!!) {
-                        callBack.onSuccess(102, buyVoucherResponse, response.code())
-                        moveToPostScanScreen(0)
-
-                    } else {
-                        buyVoucherResponse.setMessage("Failed to buy voucher!")
-                        callBack.onFailure(
-                            102, buyVoucherResponse.getMessage(), response.code()
-                        )
-                        moveToPostScanScreen(0)
-                    }
-                } else {
-                    buyVoucherResponse = BuyVoucherConfirmResponse();
-                    buyVoucherResponse.setMessage("Failed buy voucher!")
-                    callBack.onFailure(
-                        102,
-                        buyVoucherResponse.getMessage(),
-                        response.code()
-                    )
-                }
             }
         })
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    inner class BuyVoucherAsyn : AsyncTask<Void, Void, Tuple2<String, String>>() {
+        override fun doInBackground(vararg params: Void?): Tuple2<String, String> {
+            try {
+                val sdk = SDKFactory.getInstance().createSDK(getPrivateKeyFromDB(), Utils.getConf())
+                val buyVoucherOperationInBigInt = sdk.dipendente().buyVoucher(productHash)
+//                val metaData = sdk.voucherMetadata(buyVoucherOperationInBigInt)
+//                Log.d("sos", "metadata: $metaData")
+                val buyVoucherHex = buyVoucherOperationInBigInt.toString(16)
+                Log.d("sos", "buyVoucherHex: $buyVoucherHex")
+                //confirm  API call
+                confirmVoucherApi(
+                    object : APICallback {
+                        override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
+                            moveToPostScanScreen(0)
+                            Log.d("sos", "confirmVoucherApi success :")
+                        }
+
+                        override fun onFailure(requestCode: Int, obj: Any, code: Int) {
+                            hideProgress()
+
+                            Log.d("sos", "confirmVoucherApi failed :")
+                        }
+
+                        override fun onProgress(requestCode: Int, isLoading: Boolean) {
+                            Log.d("sos", "confirmVoucherApi onProgress :")
+                        }
+
+                    },
+                    productHashHex,
+                    getEmployeeAddressFromDB(),
+                    buyVoucherHex
+                )
+
+                Log.d("sos", "buyVoucherOperation :$buyVoucherOperationInBigInt")
+            } catch (e: Exception) {
+                hideProgress()
+                activity?.runOnUiThread {Toast.makeText(activity,""+e,Toast.LENGTH_LONG).show()}
+                Log.d("sos,", "AsyncTask exception in buy voucher:  ${e}")
+
+           // rollback API
+                val apiService: ApiInterface =
+                    ApiClient.cancelBuyVoucher().create(ApiInterface::class.java)
+                val call: Call<JsonObject> =
+                    apiService.cancelBuyVoucher(productHashHex!!,getEmployeeAddressFromDB())
+                Log.d("sos", "URL rollback: " + call.request().url())
+
+                call.enqueue(object : Callback<JsonObject> {
+                    override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                        Log.d("sos", "rollback buy voucher failure :" + t.message)
+                        Toast.makeText(activity,"rollback buy voucher failure : " + e.message,Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onResponse(
+                        call: Call<JsonObject>,
+                        response: Response<JsonObject>
+                    ) {
+                        moveToPostScanScreen(1)
+                        Toast.makeText(activity,"rollback buy voucher response : " + response.isSuccessful,Toast.LENGTH_SHORT).show()
+                        Log.d("sos", "rollback buy voucher response :" + response.isSuccessful)
+                    }
+
+                })
+
+            }
+            return Tuple2("", "")
+        }
+
+        override fun onPostExecute(result: Tuple2<String, String>) {
+            super.onPostExecute(result)
+
+        }
+    }
+
+    private fun showProgress() {
+        val root = binding.root.progressBar
+        val proceedBtn = binding.root.btnProceed
+        activity?.runOnUiThread {
+            root.visibility = View.VISIBLE
+            proceedBtn.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun hideProgress() {
+        val root = binding.root.progressBar
+        val proceedBtn = binding.root.btnProceed
+        activity?.runOnUiThread {
+            root.visibility = View.INVISIBLE
+            proceedBtn.visibility = View.VISIBLE
+        }
+    }
+
+    private fun getEmployeeAddressFromDB(): String {
+        return Utils.getEmployeeAddress(privateKey)
     }
 }

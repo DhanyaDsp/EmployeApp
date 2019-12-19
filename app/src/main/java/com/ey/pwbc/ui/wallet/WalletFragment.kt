@@ -63,6 +63,7 @@ class WalletFragment : Fragment() {
     private lateinit var zeroTokenView: ConstraintLayout
     private lateinit var binding: WalletFragmentBinding
     private var tokenRepo: TokenRepo? = null
+    private var privateKey: ByteArray? = null
 
     val user = User
 
@@ -122,6 +123,8 @@ class WalletFragment : Fragment() {
 
         })
 
+//        tokenRepo = TokenRepo()
+//        privateKey = getPrivateKeyFromDB()
         //fetchData()
 
     }
@@ -167,34 +170,6 @@ class WalletFragment : Fragment() {
     private fun hideProgressBar() {
         progressBar.visibility = View.GONE
     }
-
-//    private fun fetchData() {
-//        val voucherList = ArrayList<Voucher>()
-//
-//        voucherList.add(Voucher("Unieuro", "20WT", com.ey.pwbc.R.drawable.ic_camera, "Nike Store"))
-//        voucherList.add(Voucher("Adidas", "25WT", R.drawable.ic_store, "AKKAI"))
-//        voucherList.add(Voucher("Levis", "100WT", R.drawable.ic_shoe, "Nike Store"))
-//        voucherList.add(Voucher("Levis", "100WT", R.drawable.ic_shoe, "AKKAI"))
-//        voucherList.add(Voucher("Levis", "100WT", R.drawable.ic_shoe, "Brand"))
-//
-//        voucherRV = view!!.findViewById(com.ey.pwbc.R.id.voucher_List_rv)
-//        layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-//        voucherRV.layoutManager = LinearLayoutManager(
-//            activity,
-//            LinearLayoutManager.VERTICAL,
-//            false
-//        )
-//        voucherRV.setHasFixedSize(true)
-//        voucherRV.addItemDecoration(
-//            DividerItemDecoration(
-//                activity,
-//                LinearLayoutManager.VERTICAL
-//            )
-//        )
-//
-//        val adapter = VoucherListAdapter(activity!!, voucherList)
-//        voucherRV.adapter = adapter
-//    }
 
     private fun openScanner() {
         val intent = Intent(activity, ScanActivity::class.java)
@@ -250,27 +225,28 @@ class WalletFragment : Fragment() {
         val tokenBalance = sdkEmployee.myTokenBalance()
         val voucherBalance = sdkEmployee.myVouchersBalance().component1()
         val employeeVoucherList = sdkEmployee.myVouchersList()
+        Log.d("sos", "voucher list: $employeeVoucherList")
         val voucherList = arrayListOf<Voucher>()
-
-        /*for (employeeVoucher in employeeVoucherList) {
+        for (employeeVoucher in employeeVoucherList) {
             val voucherDetails = sdkEmployee.voucherMetadata(employeeVoucher)
+            Log.d("sos", "voucher1: ${voucherDetails.component1()}")
+            Log.d("sos", "voucher2: ${voucherDetails.component2()}")
+            Log.d("sos", "voucher3: ${voucherDetails.component3()}")
+            Log.d("sos", "voucher4: ${voucherDetails.component4()}")
+            Log.d("sos", "voucher5: ${voucherDetails.component5()}")
+            Log.d("sos", "employeeVoucher: ${employeeVoucher}")
+
             voucherList.add(
                 Voucher(
                     voucherDetails.component2(),
                     voucherDetails.component3().toString(),
-                    R.drawable.ic_store,
-                    ""
+                    voucherDetails.component1().toString(),
+                    voucherDetails.component4().toString(),
+                    employeeVoucher,
+                    voucherDetails.component5().toString()
                 )
             )
-        }*/
-
-        voucherList.add(Voucher(
-            "abc",
-            "250",
-            R.drawable.ic_store,
-            "Adidas"
-        ))
-
+        }
 
         return Tuple3(tokenBalance, voucherBalance, voucherList)
 
@@ -283,7 +259,11 @@ class WalletFragment : Fragment() {
             try {
                 return refreshTokenBalance()
             } catch (e: Exception) {
-
+                Toast.makeText(
+                    activity,
+                    "Display balance : " + e.localizedMessage,
+                    Toast.LENGTH_SHORT
+                ).show()
                 Log.d("sos,", "AsyncTask exception:  ${e.localizedMessage}")
             }
             return Tuple3(BigInteger.ZERO, BigInteger.ZERO, arrayListOf<Voucher>())
@@ -320,5 +300,12 @@ class WalletFragment : Fragment() {
             voucherRV.adapter = adapter
         }
     }
-
+//    inner class BuyVoucherAsyn : AsyncTask<Void, Void, Tuple2<String, String>>() {
+//
+//        val sdkEmployee = SDKFactory.getInstance().createSDK(privateKey, Utils.getConf())
+//        override fun doInBackground(vararg params: Void?): Tuple2<String, String> {
+////            vgfdgdfg
+//        }
+//
+//    }
 }
