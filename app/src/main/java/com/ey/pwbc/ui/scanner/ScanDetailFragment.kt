@@ -35,6 +35,7 @@ import com.ey.pwbc.webservice.response.BuyVoucherResponse
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.scan_detail_fragment.view.*
 import org.bouncycastle.pqc.math.linearalgebra.ByteUtils
+import org.bouncycastle.util.encoders.Hex
 import org.web3j.tuples.generated.Tuple2
 import retrofit2.Call
 import retrofit2.Callback
@@ -107,18 +108,19 @@ class ScanDetailFragment : Fragment() {
         val productName = scanData?.name
         val productValue = scanData?.value
         val productDate = scanData?.date
-        val merchantAddress = "d91960fe42fac3b6731373ad51ca6605fb8ec739"
+        val merchantAddress = scanData?.merchant
 
-        var productHash = sdk.computeProductHash(
+        val productHash = sdk.computeProductHash(
             productName,
             merchantAddress,
             BigInteger(productValue!!),
             BigInteger(productDate!!)
         )
-        productHashHex = ByteUtils.toHexString(productHash)
-//        val productHashHex = Utils.bytesToHex(productHash)
-        Log.d("sos", "productHashHex $productHashHex")
 
+        productHashHex = ByteUtils.toHexString(productHash)
+        //  val productHashHex = Utils.bytesToHex(productHash)
+        Log.d("sos", "productHashHex $productHashHex")
+        //val productHashHexNew = String(Hex.encode(productHash))
 
         // api call after calculating product hash:
         // val privateKeyAsByteArray = getPrivateKeyFromDB()
