@@ -1,5 +1,6 @@
 package com.ey.pwbc.ui.authentication
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -76,6 +77,23 @@ class LoginActivity : AppCompatActivity(), APICallback {
                 UtilsDialog.TYPE_ALERT
             )
         }
+
+        //Store username in SharedPreference
+        var userName : String? = null
+        val txt_userName = edt_login_username.text.toString()
+        if(txt_userName.equals("employee1")){
+            userName = "Filippo Rossi"
+        } else if(txt_userName.equals("employee2")){
+            userName = "VRDVLR88B10H544X"
+        }else {
+            userName = "BRBBNC72B10G100H"
+        }
+        val preference=getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
+        val editor=preference.edit()
+        editor.putBoolean("isLoggedIn",true)
+        editor.putInt("id",1)
+        editor.putString("username",userName)
+        editor.commit()
     }
 
     private fun getContractAddress(callBack: APICallback) {

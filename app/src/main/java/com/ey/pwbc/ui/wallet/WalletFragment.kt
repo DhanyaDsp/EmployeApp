@@ -1,9 +1,12 @@
 package com.ey.pwbc.ui.wallet
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,6 +65,7 @@ class WalletFragment : Fragment() {
     private lateinit var scanButton: FloatingActionButton
     private lateinit var zeroTokenView: ConstraintLayout
     private lateinit var binding: WalletFragmentBinding
+    private lateinit var employeeName: TextView
     private var tokenRepo: TokenRepo? = null
     private var privateKey: ByteArray? = null
 
@@ -139,6 +143,13 @@ class WalletFragment : Fragment() {
         refreshToken = view.findViewById(R.id.txt_refresh_view)
         scanButton = view.findViewById(R.id.civScan)
         zeroTokenView = view.findViewById(R.id.view_no_token)
+        employeeName = view.findViewById(R.id.txt_employee_name)
+
+        //Retrieve from SharedPreference
+        val preference= view.context.getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
+        val username= preference.getString("username","")
+        val id= preference.getInt("id",0)
+        employeeName.setText(username)
 
         voucherRV.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         voucherRV.addItemDecoration(
@@ -265,6 +276,8 @@ class WalletFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
                 Log.d("sos,", "AsyncTask exception:  ${e.localizedMessage}")
+
+                Log.d("sos,", "AsyncTask exception:  ${e.toString()}")
             }
             return Tuple3(BigInteger.ZERO, BigInteger.ZERO, arrayListOf<Voucher>())
         }

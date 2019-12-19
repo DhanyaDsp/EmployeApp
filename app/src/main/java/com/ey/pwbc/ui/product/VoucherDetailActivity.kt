@@ -1,6 +1,7 @@
 package com.ey.pwbc.ui.product
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -56,11 +57,21 @@ class VoucherDetailActivity : AppCompatActivity() {
     private var merchant_address: String? = null
     var toolbar: Toolbar? = null;
     val user = User
+    private var et_name: EditText? = null
+    private var et_value: EditText? = null
+    private var et_merchant: EditText? = null
+    private var et_deadline: EditText? = null
+    private var tv_performedby_name: EditText? = null
     private var tokenRepo: TokenRepo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        et_name = findViewById(R.id.et_name)
+        et_value = findViewById(R.id.et_value)
+        et_merchant = findViewById(R.id.et_merchant)
+        et_deadline = findViewById(R.id.et_deadline)
+        tv_performedby_name = findViewById(R.id.tv_performedby_name)
         TokenDBManager.init(this)
         tokenRepo = TokenRepo()
         privateKey = getPrivateKeyFromDB()
@@ -95,16 +106,15 @@ class VoucherDetailActivity : AppCompatActivity() {
             }
 
 
-            /*et_name?.setText(scanData.name)
+         /* et_name?.setText(scanData.name)
 
             et_value?.setText(scanData.value)
 
             et_merchant?.setText(scanData.merchant)
 
             et_deadline?.setText(scanData.date)
-*/
 
-            /*val prod = intent.data.toString()
+            val prod = intent.data.toString()
             Log.d("sos", "data:  ${intent.data}")
             val array = prod.split(",")
             if (intent.data == null) {
@@ -132,6 +142,12 @@ class VoucherDetailActivity : AppCompatActivity() {
 
 
         }
+        //Retrieve from SharedPreference
+        val preference= getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
+        val username= preference.getString("username","")
+        val id= preference.getInt("id",0)
+        tv_performedby_name?.setText(username)
+
         initBinding()
         initToolbar()
 

@@ -13,6 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.authentication.LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,19 +21,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.dashboard.LandingActivity"
-            android:theme="@style/landing" />
+            android:theme="@style/landing"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.authentication.KeyGenerationActivity"
-            android:theme="@style/Login">
+            android:theme="@style/Login"
+            android:screenOrientation="portrait">
 
         </activity>
 
         <activity
             android:name=".ui.product.VoucherDetailActivity"
-            android:theme="@style/voucher_screen">
+            android:theme="@style/voucher_screen"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -52,7 +57,8 @@
         </activity>
         <activity
             android:name=".ui.scanner.ScanActivity"
-            android:theme="@style/landing" />
+            android:theme="@style/landing"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

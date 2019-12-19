@@ -223,7 +223,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Non vi sono Welfare Token nel tuo wallet.in caso di recente adesione al servizio,il caricamento dei token potra richiedere qualche minuto"
+            android:text="@string/no_tokens"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -281,7 +281,7 @@
         android:gravity="start|center"
         android:padding="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Aggiornato il 02 SET 2016 alle 15:6"
+        android:text="Aggiorna"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
