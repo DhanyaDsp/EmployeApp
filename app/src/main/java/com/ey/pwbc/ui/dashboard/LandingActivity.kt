@@ -1,10 +1,12 @@
 package com.ey.pwbc.ui.dashboard
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.TextView
 import com.ey.pwbc.R
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -50,6 +52,14 @@ class LandingActivity : AppCompatActivity(), NavController.OnDestinationChangedL
         initToolbar();
         drawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
+        val header = navView.getHeaderView(0)
+        val employeeName = header.findViewById<TextView>(R.id.txt_username)
+
+        //Retrieve from SharedPreference
+        val preference= getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
+        val username= preference.getString("username","")
+        val id= preference.getInt("id",0)
+        employeeName.setText(username)
 
         navView.inflateMenu(R.menu.menu_employee)
         appBarConfiguration = AppBarConfiguration(

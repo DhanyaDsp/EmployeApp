@@ -1,5 +1,6 @@
 package com.ey.pwbc.ui.product
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -36,6 +37,7 @@ class VoucherDetailActivity : AppCompatActivity() {
     private var et_value: EditText? = null
     private var et_merchant: EditText? = null
     private var et_deadline: EditText? = null
+    private var tv_performedby_name: EditText? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -43,6 +45,7 @@ class VoucherDetailActivity : AppCompatActivity() {
         et_value = findViewById(R.id.et_value)
         et_merchant = findViewById(R.id.et_merchant)
         et_deadline = findViewById(R.id.et_deadline)
+        tv_performedby_name = findViewById(R.id.tv_performedby_name)
 
         if (intent != null) {
             val intent = intent
@@ -98,6 +101,12 @@ class VoucherDetailActivity : AppCompatActivity() {
 
             }
         }
+        //Retrieve from SharedPreference
+        val preference= getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
+        val username= preference.getString("username","")
+        val id= preference.getInt("id",0)
+        tv_performedby_name?.setText(username)
+
         initBinding()
         initToolbar()
 

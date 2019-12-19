@@ -32,12 +32,12 @@ class LogoutFragment : Fragment() {
 
         val dialogBuilder = AlertDialog.Builder(activity!!)
 
-        dialogBuilder.setMessage("Are you sure want to logout ?")
+        dialogBuilder.setMessage("Sei sicuro di voler effettuare il logout ?")
             .setCancelable(false)
-            .setPositiveButton("Proceed") { _, _ ->
+            .setPositiveButton("PROCEDI") { _, _ ->
                 activity!!.finish()
             }
-            .setNegativeButton("Cancel") { dialog, _ ->
+            .setNegativeButton("ANNULLA") { dialog, _ ->
                 dialog.cancel()
             }
 

@@ -171,7 +171,7 @@
         android:drawableStart="@drawable/ic_refresh"
         android:drawablePadding="4dp"
         android:gravity="start|center"
-        android:text="Aggiornato il 02 SET 2016 alle 15:6"
+        android:text="Aggiorna"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
         app:layout_constraintEnd_toEndOf="parent"

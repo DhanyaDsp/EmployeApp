@@ -5,7 +5,7 @@
     <string name="password">Password</string>
     <string name="forgot_password">Password dimenticata?</string>
     <string name="private_key">Chiave Privata</string>
-    <string name="public_key">Chiave Publicca</string>
+    <string name="public_key">Chiave Pubblica</string>
     <string name="login">Accedi</string>
     <string name="submit">Submit</string>
     <string name="genera_qui_la_tua_coppia_di_chiavi">Genera qui la tua coppia di chiavi</string>
@@ -62,6 +62,8 @@
     <string name="voucher_emessi">Voucher Emessi</string>
     <string name="voucher_trasferiti">Voucher Transferiti</string>
     <string name="proceedi">Proceedi</string>
+    <string name="no_tokens">Non vi sono Welfare Token nel tuo wallet. In caso di recente adesione al servizio, il caricamento dei token potrà richiedere qualche minuto
+</string>
 
 
 </resources>
