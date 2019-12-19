@@ -27,7 +27,7 @@ public class Utils {
     }
 
     public static Configuration getConf(){
-        return new Configuration.ConfigurationBuilder("0x20fB247Ced04CdA18eA78EE8D9Aa79948e516a8B",
+        return new Configuration.ConfigurationBuilder("0x4D4773F975cA0E8113a9f4171326964DAD42fe83",
                 "http://51.105.229.99:22100/"
         ).build();
     }
