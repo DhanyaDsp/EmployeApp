@@ -10,7 +10,9 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
@@ -31,12 +33,8 @@ import com.ey.pwbc.ui.dashboard.LandingActivity
 import com.ey.pwbc.webservice.APICallback
 import com.ey.pwbc.webservice.ApiClient
 import com.ey.pwbc.webservice.ApiInterface
-import com.ey.pwbc.webservice.response.BuyVoucherConfirmResponse
 import com.ey.pwbc.webservice.response.ContractAddressResponse
-import kotlinx.android.synthetic.main.activity_voucher_detail.*
 import kotlinx.android.synthetic.main.app_bar_landing.*
-import kotlinx.android.synthetic.main.post_scan_fragment.view.*
-import org.bouncycastle.crypto.agreement.srp.SRP6Client
 import org.web3j.tuples.generated.Tuple2
 import retrofit2.Call
 import retrofit2.Callback
@@ -50,12 +48,12 @@ class VoucherDetailActivity : AppCompatActivity() {
     private var deepLinkData: ScanData? = null
     private var privateKey: ByteArray? = null
     private var position: Int? = null
-    private var voucherId: String? = null;
+    private var voucherId: String? = null
     private var merchant: String? = null
     private var merchantPublicKey: String? = null
     private var voucherValueFromList: String? = null
     private var merchant_address: String? = null
-    var toolbar: Toolbar? = null;
+    var toolbar: Toolbar? = null
     val user = User
     private var et_name: EditText? = null
     private var et_value: EditText? = null
@@ -159,18 +157,18 @@ class VoucherDetailActivity : AppCompatActivity() {
 
 
     private fun initToolbar() {
-        toolbar = findViewById(com.ey.pwbc.R.id.toolbar)
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        supportActionBar?.setDisplayShowHomeEnabled(true);
-        tvTitle.text = getString(com.ey.pwbc.R.string.voucher_title)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        tvTitle.text = getString(R.string.voucher_title)
     }
 
     private fun initBinding() {
-        binding = DataBindingUtil.setContentView(this, com.ey.pwbc.R.layout.activity_voucher_detail)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_voucher_detail)
         binding.lifecycleOwner = this
-        binding.deepLinkData = deepLinkData;
+        binding.deepLinkData = deepLinkData
         viewModel = ViewModelProviders.of(this).get(VoucherDetailViewModel::class.java)
         binding.voucherDetailViewModel = viewModel
         //if we need to update the voucher fields from the edittext then we can add a voucher model here and bind it with layout.
@@ -213,14 +211,14 @@ class VoucherDetailActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(com.ey.pwbc.R.menu.landing, menu)
+        menuInflater.inflate(R.menu.landing, menu)
         return true
     }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            com.ey.pwbc.R.id.action_settings -> {
+            R.id.action_settings -> {
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -229,8 +227,8 @@ class VoucherDetailActivity : AppCompatActivity() {
 
     private fun moveToPostRedeemVoucher() {
         val redeemVoucherView =
-            this.findViewById<ConstraintLayout>(com.ey.pwbc.R.id.view_post_redeem_voucher)
-        val closeImageView = this.findViewById<ImageView>(com.ey.pwbc.R.id.ivClose)
+            this.findViewById<ConstraintLayout>(R.id.view_post_redeem_voucher)
+        val closeImageView = this.findViewById<ImageView>(R.id.ivClose)
 
 
 
@@ -285,7 +283,7 @@ class VoucherDetailActivity : AppCompatActivity() {
                 call: Call<ContractAddressResponse>,
                 response: Response<ContractAddressResponse>
             ) {
-                var contractAddressResponse: ContractAddressResponse = response.body()!!
+                val contractAddressResponse: ContractAddressResponse = response.body()!!
                 callBack.onSuccess(111, contractAddressResponse, response.code())
 
             }
@@ -316,7 +314,7 @@ class VoucherDetailActivity : AppCompatActivity() {
                 call: Call<ContractAddressResponse>,
                 response: Response<ContractAddressResponse>
             ) {
-                var contractAddressResponse: ContractAddressResponse = response.body()!!
+                val contractAddressResponse: ContractAddressResponse = response.body()!!
                 callBack.onSuccess(111, contractAddressResponse, response.code())
 
             }
@@ -347,7 +345,7 @@ class VoucherDetailActivity : AppCompatActivity() {
                 call: Call<ContractAddressResponse>,
                 response: Response<ContractAddressResponse>
             ) {
-                var contractAddressResponse: ContractAddressResponse = response.body()!!
+                val contractAddressResponse: ContractAddressResponse = response.body()!!
                 callBack.onSuccess(111, contractAddressResponse, response.code())
 
             }
@@ -357,7 +355,7 @@ class VoucherDetailActivity : AppCompatActivity() {
     private fun useVoucher() {
         val sdk = SDKFactory.getInstance().createSDK(getPrivateKeyFromDB(), Utils.getConf())
 
-        val res = sdk.dipendente().redeemVoucher(BigInteger(voucherId!!))
+        sdk.dipendente().redeemVoucher(BigInteger(voucherId!!))
         confirmRedeemVoucherApi(object : APICallback {
             override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
                 Log.d("sos", "s1")
@@ -409,4 +407,5 @@ class VoucherDetailActivity : AppCompatActivity() {
             super.onPostExecute(result)
         }
     }
+
 }
