@@ -45,12 +45,13 @@ class VoucherListAdapter(
 
         fun bindItems(voucher: Voucher,position: Int) {
             val voucherNameTV = itemView.findViewById(R.id.txt_voucher_name) as TextView
-            val voucherAmountTV = itemView.findViewById(R.id.txt_voucher_amount) as TextView
+           // val voucherAmountTV = itemView.findViewById(R.id.txt_voucher_amount) as TextView
             val voucherImageIV = itemView.findViewById(R.id.img_voucher_image) as ImageView
             val storeName = itemView.findViewById(R.id.txt_store_name) as TextView
             voucherNameTV.text = voucher.name
-            voucherAmountTV.text = voucher.value
-            storeName.text = voucher.merchant
+           // voucherAmountTV.text = voucher.value
+            //store name is voucher value: need to give proper mapping
+            storeName.text = "-WT "+voucher.merchant
 
             Glide.with(itemView.context)
                 .load(R.drawable.ic_store)

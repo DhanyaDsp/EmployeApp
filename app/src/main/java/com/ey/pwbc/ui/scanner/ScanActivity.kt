@@ -96,7 +96,7 @@ class ScanActivity : AppCompatActivity(), PermissionListener, BarcodeReader.Barc
             barcodeReader?.playBeep();
             val productName = array[0]
             val splitDomainFromData = productName.split("=")
-            val scanData = ScanData(splitDomainFromData[1].trim(), array[1], array[2], array[3])
+            val scanData = ScanData(splitDomainFromData[1].trim(), array[1], array[2], array[3],"")
             val intent = Intent()
             intent.putExtra("scanData", scanData);
             setResult(200, intent)

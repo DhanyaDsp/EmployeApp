@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.opengl.Visibility
 import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -66,6 +67,7 @@ class WalletFragment : Fragment() {
     private lateinit var zeroTokenView: ConstraintLayout
     private lateinit var binding: WalletFragmentBinding
     private lateinit var employeeName: TextView
+    private var totalTokenBalance: BigInteger? = null
     private var tokenRepo: TokenRepo? = null
     private var privateKey: ByteArray? = null
 
@@ -111,8 +113,13 @@ class WalletFragment : Fragment() {
         initialiseView(view)
         zeroBalanceTokenView()
 
-        walletFragmentViewModel =
-            ViewModelProviders.of(activity!!).get(WalletFragmentViewModel::class.java)
+//       if(!isVisited()){
+//           zeroTokenView.visibility = View.VISIBLE
+//       }else{
+//           zeroTokenView.visibility = View.INVISIBLE
+//       }
+            walletFragmentViewModel =
+                ViewModelProviders.of(activity!!).get(WalletFragmentViewModel::class.java)
         walletFragmentViewModel.init()
 
         walletFragmentViewModel.getVoucher()?.observe(this, Observer {
@@ -126,11 +133,6 @@ class WalletFragment : Fragment() {
             voucherRV.smoothScrollToPosition(walletFragmentViewModel.getVoucher()?.value?.size!! - 1)
 
         })
-
-//        tokenRepo = TokenRepo()
-//        privateKey = getPrivateKeyFromDB()
-        //fetchData()
-
     }
 
     private fun initialiseView(view: View?) {
@@ -146,9 +148,12 @@ class WalletFragment : Fragment() {
         employeeName = view.findViewById(R.id.txt_employee_name)
 
         //Retrieve from SharedPreference
-        val preference= view.context.getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
-        val username= preference.getString("username","")
-        val id= preference.getInt("id",0)
+        val preference = view.context.getSharedPreferences(
+            resources.getString(R.string.app_name),
+            Context.MODE_PRIVATE
+        )
+        val username = preference.getString("username", "")
+        val id = preference.getInt("id", 0)
         employeeName.setText(username)
 
         voucherRV.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
@@ -212,7 +217,7 @@ class WalletFragment : Fragment() {
         refreshToken.setOnClickListener {
             Toast.makeText(
                 activity,
-                "Please wait for some time to obtain balance",
+                "Si prega di attendere qualche istante per il caricamento del balance",
                 Toast.LENGTH_LONG
             ).show()
             PostWelfareAsync().execute()
@@ -238,6 +243,7 @@ class WalletFragment : Fragment() {
         val employeeVoucherList = sdkEmployee.myVouchersList()
         Log.d("sos", "voucher list: $employeeVoucherList")
         val voucherList = arrayListOf<Voucher>()
+        totalTokenBalance = BigInteger.ZERO
         for (employeeVoucher in employeeVoucherList) {
             val voucherDetails = sdkEmployee.voucherMetadata(employeeVoucher)
             Log.d("sos", "voucher1: ${voucherDetails.component1()}")
@@ -245,7 +251,11 @@ class WalletFragment : Fragment() {
             Log.d("sos", "voucher3: ${voucherDetails.component3()}")
             Log.d("sos", "voucher4: ${voucherDetails.component4()}")
             Log.d("sos", "voucher5: ${voucherDetails.component5()}")
+
+            totalTokenBalance = totalTokenBalance?.add(voucherDetails.component3())
+            //component 3 merchant
             Log.d("sos", "employeeVoucher: ${employeeVoucher}")
+
 
             voucherList.add(
                 Voucher(
@@ -258,11 +268,12 @@ class WalletFragment : Fragment() {
                 )
             )
         }
-
+        Log.d("sos", "total: ${totalTokenBalance}")
         return Tuple3(tokenBalance, voucherBalance, voucherList)
 
     }
 
+    @SuppressLint("StaticFieldLeak")
     inner class PostWelfareAsync :
         AsyncTask<Void, Void, Tuple3<BigInteger, BigInteger, List<Voucher>>>() {
 
@@ -270,11 +281,14 @@ class WalletFragment : Fragment() {
             try {
                 return refreshTokenBalance()
             } catch (e: Exception) {
-                Toast.makeText(
-                    activity,
-                    "Display balance : " + e.localizedMessage,
-                    Toast.LENGTH_SHORT
-                ).show()
+                activity?.runOnUiThread {
+                    Toast.makeText(
+                        activity,
+                        "Display balance : " + e.localizedMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
                 Log.d("sos,", "AsyncTask exception:  ${e.localizedMessage}")
 
                 Log.d("sos,", "AsyncTask exception:  ${e.toString()}")
@@ -285,10 +299,12 @@ class WalletFragment : Fragment() {
         @SuppressLint("RestrictedApi")
         override fun onPostExecute(result: Tuple3<BigInteger, BigInteger, List<Voucher>>) {
             super.onPostExecute(result)
+
+
             // API call
             zeroTokenView.visibility = View.GONE
             tokenBalanceView.text = " WT " + result.component1()
-            tokenValue.text = " WT " + result.component2()
+            tokenValue.text = " WT " + totalTokenBalance
             voucherRV.visibility = View.VISIBLE
             purchaseVoucherView.visibility = View.VISIBLE
             scanButton.visibility = View.VISIBLE
@@ -311,14 +327,29 @@ class WalletFragment : Fragment() {
 
             val adapter = VoucherListAdapter(activity!!, result.component3() as ArrayList<Voucher>)
             voucherRV.adapter = adapter
+
+//            if (!isVisited()) {
+//                setVisited(true)
+//            }
         }
     }
-//    inner class BuyVoucherAsyn : AsyncTask<Void, Void, Tuple2<String, String>>() {
-//
-//        val sdkEmployee = SDKFactory.getInstance().createSDK(privateKey, Utils.getConf())
-//        override fun doInBackground(vararg params: Void?): Tuple2<String, String> {
-////            vgfdgdfg
-//        }
-//
-//    }
+
+
+    private fun setVisited(isVisited: Boolean) {
+        val preference = activity!!.getSharedPreferences(
+            resources.getString(R.string.app_name),
+            Context.MODE_PRIVATE
+        )
+        val editor = preference.edit()
+        editor.putBoolean("isVisitedWallet", isVisited)
+        editor.apply()
+    }
+
+    private fun isVisited(): Boolean {
+        val preference = activity!!.getSharedPreferences(
+            resources.getString(R.string.app_name),
+            Context.MODE_PRIVATE
+        )
+        return preference.getBoolean("isVisitedWallet", false)
+    }
 }

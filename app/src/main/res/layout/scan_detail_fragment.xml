@@ -125,6 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/btnProceed"
                 android:layout_marginBottom="@dimen/large_padding"
+                android:visibility="invisible"
                 android:hint="@string/eseguito_da">
 
                 <androidx.appcompat.widget.AppCompatEditText

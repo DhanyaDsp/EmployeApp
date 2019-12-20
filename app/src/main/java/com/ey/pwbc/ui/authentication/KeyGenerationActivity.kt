@@ -191,72 +191,89 @@ class KeyGenerationActivity : AppCompatActivity(), APICallback {
                 fiscalCode = "VRDVLR88B10H544X"
                 name = "VRDVLR88B10H544X"
                 return Tuple2(fiscalCode, name)
+            }else if (userName == "employee3") {
+                fiscalCode = "BRBBNC72B10G100H"
+                name = "Barbara Bianchi"
+                return Tuple2(fiscalCode, name)
             } else if (userName == "employee3") {
                 fiscalCode = "BRBBNC72B10G100H"
                 name = "BRBBNC72B10G100H"
                 return Tuple2(fiscalCode, name)
-            } else {
+            } else if (userName == "Serena.Pasqua@posteitaliane.it") {
+                fiscalCode = "PSQSRN82P04H250X"
+                name = "Serena Pasqua"
                 return Tuple2(fiscalCode, name)
-            }
-        }
-        return Tuple2(fiscalCode, name)
-    }
+            } else if (userName == "Felice.Natale@posteitaliane.it") {
+                fiscalCode = "NTLFLC25P12H219Z"
+                name = "Felice Natale"
+                return Tuple2(fiscalCode, name)
+            } else if (userName == "Alberto.Bonanno@posteitaliane.it") {
+                fiscalCode = "BNNLBT31T12K100X"
+                name = "Alberto Bonanno"
+                return Tuple2(fiscalCode, name)
 
-    private fun getKeyAuthentication(callBack: APICallback, employeeAddress: String) {
-        val apiService: ApiInterface =
-            ApiClient.getKeyAuthenticationDetails().create(ApiInterface::class.java)
-        val getFiscalFromUser = generateFiscalCode(userName!!)
-        val call: Call<StoreKeyResponse> =
-            apiService.getKeyDetails(
-                getFiscalFromUser.component1(),
-                employeeAddress
-            )
-        Log.d("sos", "call request: " + call.request().url())
-        call.enqueue(object : Callback<StoreKeyResponse> {
-
-            override fun onFailure(call: Call<StoreKeyResponse>, t: Throwable) {
-                Toast.makeText(
-                    applicationContext,
-                    "Something went wrong!  ${t.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-                Log.d("sos", "onFailure " + t.localizedMessage)
-            }
-
-            override fun onResponse(
-                call: Call<StoreKeyResponse>,
-                response: Response<StoreKeyResponse>
-            ) {
-
-                var storeKeyResponse: StoreKeyResponse = response.body()!!
-                Log.d("sos", "response " + storeKeyResponse.isSuccess())
-
-                Toast.makeText(
-                    applicationContext,
-                    "Associate key has been submitted ${storeKeyResponse.isSuccess()}",
-                    Toast.LENGTH_LONG
-                ).show()
-
-                if (storeKeyResponse != null) {
-                    if (storeKeyResponse.isSuccess()!!) {
-                        callBack.onSuccess(102, storeKeyResponse, response.code())
-
-                    } else {
-                        storeKeyResponse.setMessage("Failed to get the Key Details!")
-                        callBack.onFailure(
-                            102, storeKeyResponse.getMessage(), response.code()
-                        )
-                    }
-                } else {
-                    storeKeyResponse = StoreKeyResponse();
-                    storeKeyResponse.setMessage("Failed to load the Key Details!")
-                    callBack.onFailure(
-                        102,
-                        storeKeyResponse.getMessage(),
-                        response.code()
-                    )
+            }else {
+                    return Tuple2(fiscalCode, name)
                 }
             }
-        })
+            return Tuple2(fiscalCode, name)
+        }
+
+        private fun getKeyAuthentication(callBack: APICallback, employeeAddress: String) {
+            val apiService: ApiInterface =
+                ApiClient.getKeyAuthenticationDetails().create(ApiInterface::class.java)
+            val getFiscalFromUser = generateFiscalCode(userName!!)
+            val call: Call<StoreKeyResponse> =
+                apiService.getKeyDetails(
+                    getFiscalFromUser.component1(),
+                    employeeAddress
+                )
+            Log.d("sos", "call request: " + call.request().url())
+            call.enqueue(object : Callback<StoreKeyResponse> {
+
+                override fun onFailure(call: Call<StoreKeyResponse>, t: Throwable) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Something went wrong!  ${t.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    Log.d("sos", "onFailure " + t.localizedMessage)
+                }
+
+                override fun onResponse(
+                    call: Call<StoreKeyResponse>,
+                    response: Response<StoreKeyResponse>
+                ) {
+
+                    var storeKeyResponse: StoreKeyResponse = response.body()!!
+                    Log.d("sos", "response " + storeKeyResponse.isSuccess())
+
+                    Toast.makeText(
+                        applicationContext,
+                        "Associate key has been submitted ${storeKeyResponse.isSuccess()}",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    if (storeKeyResponse != null) {
+                        if (storeKeyResponse.isSuccess()!!) {
+                            callBack.onSuccess(102, storeKeyResponse, response.code())
+
+                        } else {
+                            storeKeyResponse.setMessage("Failed to get the Key Details!")
+                            callBack.onFailure(
+                                102, storeKeyResponse.getMessage(), response.code()
+                            )
+                        }
+                    } else {
+                        storeKeyResponse = StoreKeyResponse();
+                        storeKeyResponse.setMessage("Failed to load the Key Details!")
+                        callBack.onFailure(
+                            102,
+                            storeKeyResponse.getMessage(),
+                            response.code()
+                        )
+                    }
+                }
+            })
+        }
     }
-}

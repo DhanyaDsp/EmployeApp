@@ -79,20 +79,28 @@ class LoginActivity : AppCompatActivity(), APICallback {
         }
 
         //Store username in SharedPreference
-        var userName : String? = null
+        var userName: String? = null
         val txt_userName = edt_login_username.text.toString()
-        if(txt_userName.equals("employee1")){
+        if (txt_userName.equals("employee1")) {
             userName = "Filippo Rossi"
-        } else if(txt_userName.equals("employee2")){
-            userName = "VRDVLR88B10H544X"
-        }else {
-            userName = "BRBBNC72B10G100H"
+        } else if (txt_userName.equals("employee2")) {
+            userName = "Valeria Verdi"
+        } else if (txt_userName.equals("employee3")) {
+            userName = "Barbara Bianchi"
+        } else if (txt_userName.equals("Serena.Pasqua@posteitaliane.it")) {
+            userName = "Serena Pasqua"
+        } else if (txt_userName.equals("Felice.Natale@posteitaliane.it")) {
+            userName = "Felice Natale"
+        } else if (txt_userName.equals("Alberto.Bonanno@posteitaliane.it")) {
+            userName = "Alberto Bonanno"
+        } else {
+            userName = "Barbara Bianchi"
         }
-        val preference=getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
-        val editor=preference.edit()
-        editor.putBoolean("isLoggedIn",true)
-        editor.putInt("id",1)
-        editor.putString("username",userName)
+        val preference =
+            getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
+        val editor = preference.edit()
+        editor.putBoolean("isLoggedIn", true)
+        editor.putString("username", userName)
         editor.commit()
     }
 

@@ -84,17 +84,25 @@ class VoucherDetailActivity : AppCompatActivity() {
             voucherValueFromList = intent.getStringExtra("voucher_value")
             merchant = intent.getStringExtra("merchant")
             val voucherDateFromList = intent.getStringExtra("voucher_date")
-            val voucherIdLocal = intent.getSerializableExtra("voucher_id")!!.toString()
+            // val voucherIdLocal = intent.getSerializableExtra("voucher_id")!!.toString()
             voucherId = intent.getSerializableExtra("voucher_id")!!.toString()
             merchant_address = intent.getSerializableExtra("merchant_address")!!.toString()
             position = intent.getIntExtra("position", 0)
             merchantPublicKey = voucherValueFromList?.substring(2, voucherValueFromList!!.length)
             Log.d("sos", "merchantPublicKey: $merchantPublicKey")
+
+
+            //Retrieve from SharedPreference
+            val preference =
+                getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
+            val username = preference.getString("username", "")
+
             val scanData = ScanData(
                 voucherNameFromList!!,
                 voucherValueFromList!!,
-                merchant_address!!,
-                voucherDateFromList!!
+                merchant!!,
+                voucherDateFromList!!,
+                username!!
             )
 
             if (intent.getStringExtra("voucher_name") != null) {
@@ -106,47 +114,43 @@ class VoucherDetailActivity : AppCompatActivity() {
             }
 
 
-         /* et_name?.setText(scanData.name)
+            /* et_name?.setText(scanData.name)
 
-            et_value?.setText(scanData.value)
+               et_value?.setText(scanData.value)
 
-            et_merchant?.setText(scanData.merchant)
+               et_merchant?.setText(scanData.merchant)
 
-            et_deadline?.setText(scanData.date)
+               et_deadline?.setText(scanData.date)
 
-            val prod = intent.data.toString()
-            Log.d("sos", "data:  ${intent.data}")
-            val array = prod.split(",")
-            if (intent.data == null) {
-                val scanData = ScanData("", "20 WT", "Adidas Store", "21/12/2019")
+               val prod = intent.data.toString()
+               Log.d("sos", "data:  ${intent.data}")
+               val array = prod.split(",")
+               if (intent.data == null) {
+                   val scanData = ScanData("", "20 WT", "Adidas Store", "21/12/2019")
 
-                deepLinkData = scanData
+                   deepLinkData = scanData
 
-                et_name?.setText(scanData.name)
-                et_value?.setText(scanData.value)
-                et_merchant?.setText(scanData.merchant)
-                et_deadline?.setText(scanData.date)
+                   et_name?.setText(scanData.name)
+                   et_value?.setText(scanData.value)
+                   et_merchant?.setText(scanData.merchant)
+                   et_deadline?.setText(scanData.date)
 
 
-            } else {
+               } else {
 
-                val scanData = ScanData(array[0], array[1], array[2], array[3])
+                   val scanData = ScanData(array[0], array[1], array[2], array[3])
 
-                deepLinkData = scanData
+                   deepLinkData = scanData
 
-                et_name?.setText(scanData.name)
-                et_value?.setText(scanData.value)
-                et_merchant?.setText(scanData.merchant)
-                et_deadline?.setText(scanData.date)
-            }*/
+                   et_name?.setText(scanData.name)
+                   et_value?.setText(scanData.value)
+                   et_merchant?.setText(scanData.merchant)
+                   et_deadline?.setText(scanData.date)
+               }*/
 
 
         }
-        //Retrieve from SharedPreference
-        val preference= getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
-        val username= preference.getString("username","")
-        val id= preference.getInt("id",0)
-        tv_performedby_name?.setText(username)
+
 
         initBinding()
         initToolbar()
@@ -353,7 +357,7 @@ class VoucherDetailActivity : AppCompatActivity() {
     private fun useVoucher() {
         val sdk = SDKFactory.getInstance().createSDK(getPrivateKeyFromDB(), Utils.getConf())
 
-            val res = sdk.dipendente().redeemVoucher(BigInteger(voucherId!!))
+        val res = sdk.dipendente().redeemVoucher(BigInteger(voucherId!!))
         confirmRedeemVoucherApi(object : APICallback {
             override fun onSuccess(requestCode: Int, obj: Any, code: Int) {
                 Log.d("sos", "s1")
